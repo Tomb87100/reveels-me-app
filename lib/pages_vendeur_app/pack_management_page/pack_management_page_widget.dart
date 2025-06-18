@@ -2,10 +2,8 @@ import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'pack_management_page_model.dart';
 export 'pack_management_page_model.dart';
 
@@ -651,7 +649,7 @@ class _PackManagementPageWidgetState extends State<PackManagementPageWidget> {
                   Switch.adaptive(
                     value: _model.switchValue!,
                     onChanged: (newValue) async {
-                      safeSetState(() => _model.switchValue = newValue!);
+                      safeSetState(() => _model.switchValue = newValue);
                     },
                     activeColor: FlutterFlowTheme.of(context).primary,
                     activeTrackColor: FlutterFlowTheme.of(context).primary,

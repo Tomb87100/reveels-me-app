@@ -1,10 +1,8 @@
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import 'dart:ui';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'nav_barre_model.dart';
 export 'nav_barre_model.dart';
 
@@ -84,7 +82,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                     children: [
                       Icon(
                         FFIcons.kklockOpen,
-                        color: widget!.number == 1
+                        color: widget.number == 1
                             ? FlutterFlowTheme.of(context).primary
                             : FlutterFlowTheme.of(context).secondaryText,
                         size: 23.0,
@@ -102,7 +100,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                                           .bodyLarge
                                           .fontStyle,
                                     ),
-                                    color: widget!.number == 1
+                                    color: widget.number == 1
                                         ? FlutterFlowTheme.of(context).primary
                                         : FlutterFlowTheme.of(context)
                                             .secondaryText,
@@ -145,7 +143,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                     children: [
                       Icon(
                         FFIcons.kklink,
-                        color: widget!.number == 2
+                        color: widget.number == 2
                             ? FlutterFlowTheme.of(context).primary
                             : FlutterFlowTheme.of(context).secondaryText,
                         size: 23.0,
@@ -163,7 +161,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                                           .bodyLarge
                                           .fontStyle,
                                     ),
-                                    color: widget!.number == 2
+                                    color: widget.number == 2
                                         ? FlutterFlowTheme.of(context).primary
                                         : FlutterFlowTheme.of(context)
                                             .secondaryText,
@@ -206,7 +204,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                     children: [
                       Icon(
                         FFIcons.kkshoppingCart,
-                        color: widget!.number == 3
+                        color: widget.number == 3
                             ? FlutterFlowTheme.of(context).primary
                             : FlutterFlowTheme.of(context).secondaryText,
                         size: 23.0,
@@ -224,7 +222,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                                           .bodyLarge
                                           .fontStyle,
                                     ),
-                                    color: widget!.number == 3
+                                    color: widget.number == 3
                                         ? FlutterFlowTheme.of(context).primary
                                         : FlutterFlowTheme.of(context)
                                             .secondaryText,
@@ -267,7 +265,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                     children: [
                       Icon(
                         FFIcons.kkuser,
-                        color: widget!.number == 4
+                        color: widget.number == 4
                             ? FlutterFlowTheme.of(context).primary
                             : FlutterFlowTheme.of(context).secondaryText,
                         size: 23.0,
@@ -285,7 +283,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                                           .bodyLarge
                                           .fontStyle,
                                     ),
-                                    color: widget!.number == 4
+                                    color: widget.number == 4
                                         ? FlutterFlowTheme.of(context).primary
                                         : FlutterFlowTheme.of(context)
                                             .secondaryText,

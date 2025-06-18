@@ -1,9 +1,7 @@
-import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:ui';
 import '/custom_code/actions/index.dart' as actions;
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
@@ -125,9 +123,6 @@ class _EditMediaListPageWidgetState extends State<EditMediaListPageWidget> {
                                 width: 200.0,
                                 height: 250.0,
                                 storagePath: mediaItemFromGridItem
-                                                .thumbnailStoragePath !=
-                                            null &&
-                                        mediaItemFromGridItem
                                                 .thumbnailStoragePath !=
                                             ''
                                     ? mediaItemFromGridItem.thumbnailStoragePath

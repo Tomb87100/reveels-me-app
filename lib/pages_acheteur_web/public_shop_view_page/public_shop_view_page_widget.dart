@@ -2,10 +2,8 @@ import '/component_vendeur_app/pack_item_shop_link/pack_item_shop_link_widget.da
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 import 'public_shop_view_page_model.dart';
 export 'public_shop_view_page_model.dart';
 

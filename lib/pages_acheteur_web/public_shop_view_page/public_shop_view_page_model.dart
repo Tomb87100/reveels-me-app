@@ -1,12 +1,7 @@
 import '/component_vendeur_app/pack_item_shop_link/pack_item_shop_link_widget.dart';
-import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
-import '/flutter_flow/flutter_flow_widgets.dart';
-import 'dart:ui';
 import 'public_shop_view_page_widget.dart' show PublicShopViewPageWidget;
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
 
 class PublicShopViewPageModel
     extends FlutterFlowModel<PublicShopViewPageWidget> {
