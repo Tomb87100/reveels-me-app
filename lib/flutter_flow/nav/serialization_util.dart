@@ -222,6 +222,8 @@ dynamic deserializeParam<T>(
             return PacksRow(data);
           case ProfilesRow:
             return ProfilesRow(data);
+          case PackDetailsViewRow:
+            return PackDetailsViewRow(data);
           case ReportsRow:
             return ReportsRow(data);
           case StripeWebhooksRow:

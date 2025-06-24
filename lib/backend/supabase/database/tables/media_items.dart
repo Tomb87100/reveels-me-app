@@ -46,4 +46,7 @@ class MediaItemsRow extends SupabaseDataRow {
 
   DateTime? get createdAt => getField<DateTime>('created_at');
   set createdAt(DateTime? value) => setField<DateTime>('created_at', value);
+
+  bool get isBlurred => getField<bool>('is_blurred')!;
+  set isBlurred(bool value) => setField<bool>('is_blurred', value);
 }

@@ -13,12 +13,16 @@ class ProfileDataStruct extends BaseStruct {
     String? publicBio,
     String? avatarUrl,
     String? stripeKycStatus,
+    String? shopUrlSlug,
+    String? stripeAccountId,
   })  : _id = id,
         _email = email,
         _publicName = publicName,
         _publicBio = publicBio,
         _avatarUrl = avatarUrl,
-        _stripeKycStatus = stripeKycStatus;
+        _stripeKycStatus = stripeKycStatus,
+        _shopUrlSlug = shopUrlSlug,
+        _stripeAccountId = stripeAccountId;
 
   // "id" field.
   String? _id;
@@ -62,6 +66,20 @@ class ProfileDataStruct extends BaseStruct {
 
   bool hasStripeKycStatus() => _stripeKycStatus != null;
 
+  // "shopUrlSlug" field.
+  String? _shopUrlSlug;
+  String get shopUrlSlug => _shopUrlSlug ?? '';
+  set shopUrlSlug(String? val) => _shopUrlSlug = val;
+
+  bool hasShopUrlSlug() => _shopUrlSlug != null;
+
+  // "stripeAccountId" field.
+  String? _stripeAccountId;
+  String get stripeAccountId => _stripeAccountId ?? '';
+  set stripeAccountId(String? val) => _stripeAccountId = val;
+
+  bool hasStripeAccountId() => _stripeAccountId != null;
+
   static ProfileDataStruct fromMap(Map<String, dynamic> data) =>
       ProfileDataStruct(
         id: data['id'] as String?,
@@ -70,6 +88,8 @@ class ProfileDataStruct extends BaseStruct {
         publicBio: data['publicBio'] as String?,
         avatarUrl: data['avatarUrl'] as String?,
         stripeKycStatus: data['stripeKycStatus'] as String?,
+        shopUrlSlug: data['shopUrlSlug'] as String?,
+        stripeAccountId: data['stripeAccountId'] as String?,
       );
 
   static ProfileDataStruct? maybeFromMap(dynamic data) => data is Map
@@ -83,6 +103,8 @@ class ProfileDataStruct extends BaseStruct {
         'publicBio': _publicBio,
         'avatarUrl': _avatarUrl,
         'stripeKycStatus': _stripeKycStatus,
+        'shopUrlSlug': _shopUrlSlug,
+        'stripeAccountId': _stripeAccountId,
       }.withoutNulls;
 
   @override
@@ -109,6 +131,14 @@ class ProfileDataStruct extends BaseStruct {
         ),
         'stripeKycStatus': serializeParam(
           _stripeKycStatus,
+          ParamType.String,
+        ),
+        'shopUrlSlug': serializeParam(
+          _shopUrlSlug,
+          ParamType.String,
+        ),
+        'stripeAccountId': serializeParam(
+          _stripeAccountId,
           ParamType.String,
         ),
       }.withoutNulls;
@@ -145,6 +175,16 @@ class ProfileDataStruct extends BaseStruct {
           ParamType.String,
           false,
         ),
+        shopUrlSlug: deserializeParam(
+          data['shopUrlSlug'],
+          ParamType.String,
+          false,
+        ),
+        stripeAccountId: deserializeParam(
+          data['stripeAccountId'],
+          ParamType.String,
+          false,
+        ),
       );
 
   @override
@@ -158,12 +198,22 @@ class ProfileDataStruct extends BaseStruct {
         publicName == other.publicName &&
         publicBio == other.publicBio &&
         avatarUrl == other.avatarUrl &&
-        stripeKycStatus == other.stripeKycStatus;
+        stripeKycStatus == other.stripeKycStatus &&
+        shopUrlSlug == other.shopUrlSlug &&
+        stripeAccountId == other.stripeAccountId;
   }
 
   @override
-  int get hashCode => const ListEquality()
-      .hash([id, email, publicName, publicBio, avatarUrl, stripeKycStatus]);
+  int get hashCode => const ListEquality().hash([
+        id,
+        email,
+        publicName,
+        publicBio,
+        avatarUrl,
+        stripeKycStatus,
+        shopUrlSlug,
+        stripeAccountId
+      ]);
 }
 
 ProfileDataStruct createProfileDataStruct({
@@ -173,6 +223,8 @@ ProfileDataStruct createProfileDataStruct({
   String? publicBio,
   String? avatarUrl,
   String? stripeKycStatus,
+  String? shopUrlSlug,
+  String? stripeAccountId,
 }) =>
     ProfileDataStruct(
       id: id,
@@ -181,4 +233,6 @@ ProfileDataStruct createProfileDataStruct({
       publicBio: publicBio,
       avatarUrl: avatarUrl,
       stripeKycStatus: stripeKycStatus,
+      shopUrlSlug: shopUrlSlug,
+      stripeAccountId: stripeAccountId,
     );

@@ -15,6 +15,11 @@ class PackDataStruct extends BaseStruct {
     int? totalSales,
     double? totalRevenueNet,
     List<MediaItemDataStruct>? mediaItems,
+    bool? isInShop,
+    String? packSlug,
+    bool? isActiveForSale,
+    String? dedicatedCoverPath,
+    int? mediaCount,
   })  : _id = id,
         _name = name,
         _description = description,
@@ -23,7 +28,12 @@ class PackDataStruct extends BaseStruct {
         _clickCount = clickCount,
         _totalSales = totalSales,
         _totalRevenueNet = totalRevenueNet,
-        _mediaItems = mediaItems;
+        _mediaItems = mediaItems,
+        _isInShop = isInShop,
+        _packSlug = packSlug,
+        _isActiveForSale = isActiveForSale,
+        _dedicatedCoverPath = dedicatedCoverPath,
+        _mediaCount = mediaCount;
 
   // "id" field.
   String? _id;
@@ -102,6 +112,43 @@ class PackDataStruct extends BaseStruct {
 
   bool hasMediaItems() => _mediaItems != null;
 
+  // "is_in_shop" field.
+  bool? _isInShop;
+  bool get isInShop => _isInShop ?? false;
+  set isInShop(bool? val) => _isInShop = val;
+
+  bool hasIsInShop() => _isInShop != null;
+
+  // "packSlug" field.
+  String? _packSlug;
+  String get packSlug => _packSlug ?? '';
+  set packSlug(String? val) => _packSlug = val;
+
+  bool hasPackSlug() => _packSlug != null;
+
+  // "is_active_for_sale" field.
+  bool? _isActiveForSale;
+  bool get isActiveForSale => _isActiveForSale ?? true;
+  set isActiveForSale(bool? val) => _isActiveForSale = val;
+
+  bool hasIsActiveForSale() => _isActiveForSale != null;
+
+  // "dedicatedCoverPath" field.
+  String? _dedicatedCoverPath;
+  String get dedicatedCoverPath => _dedicatedCoverPath ?? '';
+  set dedicatedCoverPath(String? val) => _dedicatedCoverPath = val;
+
+  bool hasDedicatedCoverPath() => _dedicatedCoverPath != null;
+
+  // "mediaCount" field.
+  int? _mediaCount;
+  int get mediaCount => _mediaCount ?? 0;
+  set mediaCount(int? val) => _mediaCount = val;
+
+  void incrementMediaCount(int amount) => mediaCount = mediaCount + amount;
+
+  bool hasMediaCount() => _mediaCount != null;
+
   static PackDataStruct fromMap(Map<String, dynamic> data) => PackDataStruct(
         id: data['id'] as String?,
         name: data['name'] as String?,
@@ -115,6 +162,11 @@ class PackDataStruct extends BaseStruct {
           data['mediaItems'],
           MediaItemDataStruct.fromMap,
         ),
+        isInShop: data['is_in_shop'] as bool?,
+        packSlug: data['packSlug'] as String?,
+        isActiveForSale: data['is_active_for_sale'] as bool?,
+        dedicatedCoverPath: data['dedicatedCoverPath'] as String?,
+        mediaCount: castToType<int>(data['mediaCount']),
       );
 
   static PackDataStruct? maybeFromMap(dynamic data) =>
@@ -130,6 +182,11 @@ class PackDataStruct extends BaseStruct {
         'totalSales': _totalSales,
         'totalRevenueNet': _totalRevenueNet,
         'mediaItems': _mediaItems?.map((e) => e.toMap()).toList(),
+        'is_in_shop': _isInShop,
+        'packSlug': _packSlug,
+        'is_active_for_sale': _isActiveForSale,
+        'dedicatedCoverPath': _dedicatedCoverPath,
+        'mediaCount': _mediaCount,
       }.withoutNulls;
 
   @override
@@ -170,6 +227,26 @@ class PackDataStruct extends BaseStruct {
           _mediaItems,
           ParamType.DataStruct,
           isList: true,
+        ),
+        'is_in_shop': serializeParam(
+          _isInShop,
+          ParamType.bool,
+        ),
+        'packSlug': serializeParam(
+          _packSlug,
+          ParamType.String,
+        ),
+        'is_active_for_sale': serializeParam(
+          _isActiveForSale,
+          ParamType.bool,
+        ),
+        'dedicatedCoverPath': serializeParam(
+          _dedicatedCoverPath,
+          ParamType.String,
+        ),
+        'mediaCount': serializeParam(
+          _mediaCount,
+          ParamType.int,
         ),
       }.withoutNulls;
 
@@ -221,6 +298,31 @@ class PackDataStruct extends BaseStruct {
           true,
           structBuilder: MediaItemDataStruct.fromSerializableMap,
         ),
+        isInShop: deserializeParam(
+          data['is_in_shop'],
+          ParamType.bool,
+          false,
+        ),
+        packSlug: deserializeParam(
+          data['packSlug'],
+          ParamType.String,
+          false,
+        ),
+        isActiveForSale: deserializeParam(
+          data['is_active_for_sale'],
+          ParamType.bool,
+          false,
+        ),
+        dedicatedCoverPath: deserializeParam(
+          data['dedicatedCoverPath'],
+          ParamType.String,
+          false,
+        ),
+        mediaCount: deserializeParam(
+          data['mediaCount'],
+          ParamType.int,
+          false,
+        ),
       );
 
   @override
@@ -238,7 +340,12 @@ class PackDataStruct extends BaseStruct {
         clickCount == other.clickCount &&
         totalSales == other.totalSales &&
         totalRevenueNet == other.totalRevenueNet &&
-        listEquality.equals(mediaItems, other.mediaItems);
+        listEquality.equals(mediaItems, other.mediaItems) &&
+        isInShop == other.isInShop &&
+        packSlug == other.packSlug &&
+        isActiveForSale == other.isActiveForSale &&
+        dedicatedCoverPath == other.dedicatedCoverPath &&
+        mediaCount == other.mediaCount;
   }
 
   @override
@@ -251,7 +358,12 @@ class PackDataStruct extends BaseStruct {
         clickCount,
         totalSales,
         totalRevenueNet,
-        mediaItems
+        mediaItems,
+        isInShop,
+        packSlug,
+        isActiveForSale,
+        dedicatedCoverPath,
+        mediaCount
       ]);
 }
 
@@ -264,6 +376,11 @@ PackDataStruct createPackDataStruct({
   int? clickCount,
   int? totalSales,
   double? totalRevenueNet,
+  bool? isInShop,
+  String? packSlug,
+  bool? isActiveForSale,
+  String? dedicatedCoverPath,
+  int? mediaCount,
 }) =>
     PackDataStruct(
       id: id,
@@ -274,4 +391,9 @@ PackDataStruct createPackDataStruct({
       clickCount: clickCount,
       totalSales: totalSales,
       totalRevenueNet: totalRevenueNet,
+      isInShop: isInShop,
+      packSlug: packSlug,
+      isActiveForSale: isActiveForSale,
+      dedicatedCoverPath: dedicatedCoverPath,
+      mediaCount: mediaCount,
     );

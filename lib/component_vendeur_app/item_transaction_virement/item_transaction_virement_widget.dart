@@ -28,6 +28,8 @@ class _ItemTransactionVirementWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => ItemTransactionVirementModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

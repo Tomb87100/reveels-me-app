@@ -8,6 +8,7 @@ export 'table.dart';
 export 'tables/pack_stats_view.dart';
 export 'tables/packs.dart';
 export 'tables/profiles.dart';
+export 'tables/pack_details_view.dart';
 export 'tables/reports.dart';
 export 'tables/stripe_webhooks.dart';
 export 'tables/payout_requests.dart';

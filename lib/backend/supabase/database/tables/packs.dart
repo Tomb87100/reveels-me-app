@@ -52,4 +52,8 @@ class PacksRow extends SupabaseDataRow {
 
   DateTime? get updatedAt => getField<DateTime>('updated_at');
   set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
+
+  String? get dedicatedCoverPath => getField<String>('dedicated_cover_path');
+  set dedicatedCoverPath(String? value) =>
+      setField<String>('dedicated_cover_path', value);
 }

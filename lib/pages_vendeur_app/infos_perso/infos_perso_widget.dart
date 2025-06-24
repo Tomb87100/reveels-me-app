@@ -34,6 +34,8 @@ class _InfosPersoWidgetState extends State<InfosPersoWidget> {
 
     _model.textController ??= TextEditingController(text: 'TomB87');
     _model.textFieldFocusNode ??= FocusNode();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

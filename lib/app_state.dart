@@ -102,6 +102,35 @@ class FFAppState extends ChangeNotifier {
     updateFn(_currentUserProfile);
     prefs.setString('ff_currentUserProfile', _currentUserProfile.serialize());
   }
+
+  List<PackDataStruct> _shopPacks = [];
+  List<PackDataStruct> get shopPacks => _shopPacks;
+  set shopPacks(List<PackDataStruct> value) {
+    _shopPacks = value;
+  }
+
+  void addToShopPacks(PackDataStruct value) {
+    shopPacks.add(value);
+  }
+
+  void removeFromShopPacks(PackDataStruct value) {
+    shopPacks.remove(value);
+  }
+
+  void removeAtIndexFromShopPacks(int index) {
+    shopPacks.removeAt(index);
+  }
+
+  void updateShopPacksAtIndex(
+    int index,
+    PackDataStruct Function(PackDataStruct) updateFn,
+  ) {
+    shopPacks[index] = updateFn(_shopPacks[index]);
+  }
+
+  void insertAtIndexInShopPacks(int index, PackDataStruct value) {
+    shopPacks.insert(index, value);
+  }
 }
 
 void _safeInit(Function() initializeField) {

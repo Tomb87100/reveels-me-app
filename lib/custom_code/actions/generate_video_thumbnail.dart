@@ -4,44 +4,42 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom actions
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// Code mis à jour pour generateVideoThumbnail
 import 'dart:io';
 import 'dart:typed_data';
 import 'package:video_thumbnail/video_thumbnail.dart';
 import 'package:path_provider/path_provider.dart';
 
-Future<FFUploadedFile?> generateVideoThumbnail(FFUploadedFile videoFile) async {
-  // CORRECTION: On gère le cas où le nom est null avec `?? ''`
-  final lowerCaseName = (videoFile.name ?? '').toLowerCase();
+Future<FFUploadedFile?> generateVideoThumbnail(
+  LocalFileDataStruct videoFile,
+) async {
+  final lowerCaseName = (videoFile.name).toLowerCase();
   final isVideo = lowerCaseName.endsWith('.mp4') ||
       lowerCaseName.endsWith('.mov') ||
       lowerCaseName.endsWith('.quicktime');
 
-  if (!isVideo || videoFile.bytes == null) {
+  if (!isVideo) {
     return null;
   }
 
   try {
-    final tempDir = await getTemporaryDirectory();
-    final tempPath = '${tempDir.path}/${videoFile.name}';
-    await File(tempPath).writeAsBytes(videoFile.bytes!);
-
     final thumbnailBytes = await VideoThumbnail.thumbnailData(
-      video: tempPath,
+      video: videoFile.path,
       imageFormat: ImageFormat.JPEG,
       maxWidth: 400,
       quality: 80,
     );
 
-    await File(tempPath).delete();
-
     if (thumbnailBytes != null) {
+      // --- CORRECTION APPLIQUÉE ICI ---
+      // On retire l'ancienne extension et on force le .jpg
+      String originalNameWithoutExt = videoFile.name.split('.').first;
       return FFUploadedFile(
-        name: 'thumbnail_${videoFile.name}.jpg',
+        name: 'thumbnail_${originalNameWithoutExt}.jpg',
         bytes: thumbnailBytes,
       );
     }

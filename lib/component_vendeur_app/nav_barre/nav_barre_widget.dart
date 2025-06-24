@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'nav_barre_model.dart';
 export 'nav_barre_model.dart';
 
@@ -31,6 +32,8 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => NavBarreModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -42,6 +45,8 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Align(
       alignment: AlignmentDirectional(0.0, 1.0),
       child: Container(
@@ -188,7 +193,13 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
                     safeSetState(() {});
 
                     context.pushNamed(
-                      SellerShopPageWidget.routeName,
+                      ShopPageWidget.routeName,
+                      pathParameters: {
+                        'shopSlug': serializeParam(
+                          FFAppState().currentUserProfile.shopUrlSlug,
+                          ParamType.String,
+                        ),
+                      }.withoutNulls,
                       extra: <String, dynamic>{
                         kTransitionInfoKey: TransitionInfo(
                           hasTransition: true,

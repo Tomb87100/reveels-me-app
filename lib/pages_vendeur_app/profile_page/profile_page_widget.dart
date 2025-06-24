@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'profile_page_model.dart';
 export 'profile_page_model.dart';
 
@@ -28,6 +29,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ProfilePageModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -39,6 +42,8 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -97,7 +102,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                     ),
                               ),
                               Text(
-                                'adresseemail@gmail.com',
+                                FFAppState().currentUserProfile.email,
                                 style: FlutterFlowTheme.of(context)
                                     .bodyMedium
                                     .override(
@@ -791,6 +796,7 @@ class _ProfilePageWidgetState extends State<ProfilePageWidget> {
                                     FFAppState().allMyPacks = [];
                                     FFAppState().currentUserProfile =
                                         ProfileDataStruct();
+                                    FFAppState().shopPacks = [];
                                     safeSetState(() {});
                                     GoRouter.of(context).prepareAuthEvent();
                                     await authManager.signOut();

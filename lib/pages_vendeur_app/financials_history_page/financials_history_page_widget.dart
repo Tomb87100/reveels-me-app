@@ -29,6 +29,8 @@ class _FinancialsHistoryPageWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => FinancialsHistoryPageModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

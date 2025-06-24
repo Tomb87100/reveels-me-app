@@ -26,6 +26,8 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PublicPackViewPageModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

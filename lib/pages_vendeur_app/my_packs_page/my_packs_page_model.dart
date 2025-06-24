@@ -1,3 +1,4 @@
+import '/backend/schema/structs/index.dart';
 import '/component_vendeur_app/nav_barre/nav_barre_widget.dart';
 import '/component_vendeur_app/pack_list_item_component/pack_list_item_component_widget.dart';
 import '/flutter_flow/flutter_flow_util.dart';
@@ -8,26 +9,24 @@ import 'package:flutter/material.dart';
 class MyPacksPageModel extends FlutterFlowModel<MyPacksPageWidget> {
   ///  State fields for stateful widgets in this page.
 
-  // Model for PackListItemComponent component.
-  late PackListItemComponentModel packListItemComponentModel1;
-  // Model for PackListItemComponent component.
-  late PackListItemComponentModel packListItemComponentModel2;
+  // Stores action output result for [Custom Action - fetchAndMapUserPacks] action in MyPacksPage widget.
+  List<PackDataStruct>? myPacksList;
+  // Models for PackListItemComponent dynamic component.
+  late FlutterFlowDynamicModels<PackListItemComponentModel>
+      packListItemComponentModels;
   // Model for NavBarre component.
   late NavBarreModel navBarreModel;
 
   @override
   void initState(BuildContext context) {
-    packListItemComponentModel1 =
-        createModel(context, () => PackListItemComponentModel());
-    packListItemComponentModel2 =
-        createModel(context, () => PackListItemComponentModel());
+    packListItemComponentModels =
+        FlutterFlowDynamicModels(() => PackListItemComponentModel());
     navBarreModel = createModel(context, () => NavBarreModel());
   }
 
   @override
   void dispose() {
-    packListItemComponentModel1.dispose();
-    packListItemComponentModel2.dispose();
+    packListItemComponentModels.dispose();
     navBarreModel.dispose();
   }
 }

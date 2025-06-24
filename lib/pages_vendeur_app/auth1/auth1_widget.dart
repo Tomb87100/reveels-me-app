@@ -3,6 +3,7 @@ import '/flutter_flow/flutter_flow_animations.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
@@ -109,6 +110,8 @@ class _Auth1WidgetState extends State<Auth1Widget>
         ],
       ),
     });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -678,10 +681,35 @@ class _Auth1WidgetState extends State<Auth1Widget>
                                                         return;
                                                       }
 
+                                                      _model.fetchedProfile =
+                                                          await actions
+                                                              .fetchCurrentUserProfile();
+                                                      FFAppState()
+                                                              .currentUserProfile =
+                                                          _model
+                                                              .fetchedProfile!;
+                                                      safeSetState(() {});
+
                                                       context.goNamedAuth(
-                                                          SelectMediaPageWidget
-                                                              .routeName,
-                                                          context.mounted);
+                                                        SelectMediaPageWidget
+                                                            .routeName,
+                                                        context.mounted,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          kTransitionInfoKey:
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .fade,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    0),
+                                                          ),
+                                                        },
+                                                      );
+
+                                                      safeSetState(() {});
                                                     },
                                                     text: 'Sign In',
                                                     options: FFButtonOptions(
@@ -1390,10 +1418,36 @@ class _Auth1WidgetState extends State<Auth1Widget>
                                                         return;
                                                       }
 
+                                                      _model.fetchedProfileLogged =
+                                                          await actions
+                                                              .fetchCurrentUserProfile();
+
                                                       context.goNamedAuth(
-                                                          SelectMediaPageWidget
-                                                              .routeName,
-                                                          context.mounted);
+                                                        SelectMediaPageWidget
+                                                            .routeName,
+                                                        context.mounted,
+                                                        extra: <String,
+                                                            dynamic>{
+                                                          kTransitionInfoKey:
+                                                              TransitionInfo(
+                                                            hasTransition: true,
+                                                            transitionType:
+                                                                PageTransitionType
+                                                                    .fade,
+                                                            duration: Duration(
+                                                                milliseconds:
+                                                                    0),
+                                                          ),
+                                                        },
+                                                      );
+
+                                                      FFAppState()
+                                                              .currentUserProfile =
+                                                          _model
+                                                              .fetchedProfile!;
+                                                      safeSetState(() {});
+
+                                                      safeSetState(() {});
                                                     },
                                                     text: 'Create Account',
                                                     options: FFButtonOptions(

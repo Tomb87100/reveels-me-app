@@ -1,10 +1,14 @@
+import '/backend/schema/structs/index.dart';
 import '/component_vendeur_app/nav_barre/nav_barre_widget.dart';
 import '/component_vendeur_app/pack_list_item_component/pack_list_item_component_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'my_packs_page_model.dart';
 export 'my_packs_page_model.dart';
 
@@ -27,6 +31,16 @@ class _MyPacksPageWidgetState extends State<MyPacksPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => MyPacksPageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.myPacksList = await actions.fetchAndMapUserPacks();
+      FFAppState().allMyPacks =
+          _model.myPacksList!.toList().cast<PackDataStruct>();
+      safeSetState(() {});
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -38,6 +52,8 @@ class _MyPacksPageWidgetState extends State<MyPacksPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -46,8 +62,8 @@ class _MyPacksPageWidgetState extends State<MyPacksPageWidget> {
       child: Scaffold(
         key: scaffoldKey,
         backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
-        body: Padding(
-          padding: EdgeInsetsDirectional.fromSTEB(0.0, 30.0, 0.0, 0.0),
+        body: SafeArea(
+          top: true,
           child: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -79,40 +95,61 @@ class _MyPacksPageWidgetState extends State<MyPacksPageWidget> {
                         ),
                       ),
                       Expanded(
-                        child: ListView(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                context.pushNamed(
-                                  PackManagementPageWidget.routeName,
-                                  extra: <String, dynamic>{
-                                    kTransitionInfoKey: TransitionInfo(
-                                      hasTransition: true,
-                                      transitionType: PageTransitionType.fade,
-                                      duration: Duration(milliseconds: 0),
+                        child: Builder(
+                          builder: (context) {
+                            final packItemFromState =
+                                FFAppState().allMyPacks.toList();
+
+                            return ListView.separated(
+                              padding: EdgeInsets.zero,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: packItemFromState.length,
+                              separatorBuilder: (_, __) =>
+                                  SizedBox(height: 10.0),
+                              itemBuilder: (context, packItemFromStateIndex) {
+                                final packItemFromStateItem =
+                                    packItemFromState[packItemFromStateIndex];
+                                return wrapWithModel(
+                                  model: _model.packListItemComponentModels
+                                      .getModel(
+                                    packItemFromStateItem.id,
+                                    packItemFromStateIndex,
+                                  ),
+                                  updateCallback: () => safeSetState(() {}),
+                                  child: PackListItemComponentWidget(
+                                    key: Key(
+                                      'Keykm9_${packItemFromStateItem.id}',
                                     ),
-                                  },
+                                    titre: packItemFromStateItem.name,
+                                    price:
+                                        packItemFromStateItem.baseSellerPrice,
+                                    totalvente: packItemFromStateItem.totalSales
+                                        .toDouble(),
+                                    stats:
+                                        '${packItemFromStateItem.mediaCount.toString()} / ${packItemFromStateItem.clickCount.toString()}',
+                                    storagePath: packItemFromStateItem
+                                                    .dedicatedCoverPath !=
+                                                ''
+                                        ? packItemFromStateItem
+                                            .dedicatedCoverPath
+                                        : packItemFromStateItem.coverImagePath,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        PackManagementPageWidget.routeName,
+                                        queryParameters: {
+                                          'packId': serializeParam(
+                                            packItemFromStateItem.id,
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                      );
+                                    },
+                                  ),
                                 );
                               },
-                              child: wrapWithModel(
-                                model: _model.packListItemComponentModel1,
-                                updateCallback: () => safeSetState(() {}),
-                                child: PackListItemComponentWidget(),
-                              ),
-                            ),
-                            wrapWithModel(
-                              model: _model.packListItemComponentModel2,
-                              updateCallback: () => safeSetState(() {}),
-                              child: PackListItemComponentWidget(),
-                            ),
-                          ].divide(SizedBox(height: 10.0)),
+                            );
+                          },
                         ),
                       ),
                     ].divide(SizedBox(height: 20.0)),

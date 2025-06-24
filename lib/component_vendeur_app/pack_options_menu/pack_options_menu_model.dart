@@ -1,9 +1,8 @@
 import '/flutter_flow/flutter_flow_util.dart';
-import 'public_shop_view_page_widget.dart' show PublicShopViewPageWidget;
+import 'pack_options_menu_widget.dart' show PackOptionsMenuWidget;
 import 'package:flutter/material.dart';
 
-class PublicShopViewPageModel
-    extends FlutterFlowModel<PublicShopViewPageWidget> {
+class PackOptionsMenuModel extends FlutterFlowModel<PackOptionsMenuWidget> {
   @override
   void initState(BuildContext context) {}
 

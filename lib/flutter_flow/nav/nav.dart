@@ -106,7 +106,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: PackManagementPageWidget.routeName,
           path: PackManagementPageWidget.routePath,
-          builder: (context, params) => PackManagementPageWidget(),
+          builder: (context, params) => PackManagementPageWidget(
+            packId: params.getParam(
+              'packId',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: MyPacksPageWidget.routeName,
@@ -114,9 +119,14 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           builder: (context, params) => MyPacksPageWidget(),
         ),
         FFRoute(
-          name: SellerShopPageWidget.routeName,
-          path: SellerShopPageWidget.routePath,
-          builder: (context, params) => SellerShopPageWidget(),
+          name: ShopPageWidget.routeName,
+          path: ShopPageWidget.routePath,
+          builder: (context, params) => ShopPageWidget(
+            shopSlug: params.getParam(
+              'shopSlug',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: ProfilePageWidget.routeName,

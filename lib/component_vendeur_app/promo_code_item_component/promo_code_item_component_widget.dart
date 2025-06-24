@@ -27,6 +27,8 @@ class _PromoCodeItemComponentWidgetState
   void initState() {
     super.initState();
     _model = createModel(context, () => PromoCodeItemComponentModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

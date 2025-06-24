@@ -12,11 +12,13 @@ class MediaItemDataStruct extends BaseStruct {
     String? storagePath,
     String? thumbnailStoragePath,
     int? orderInPack,
+    bool? isBlurred,
   })  : _id = id,
         _mediaType = mediaType,
         _storagePath = storagePath,
         _thumbnailStoragePath = thumbnailStoragePath,
-        _orderInPack = orderInPack;
+        _orderInPack = orderInPack,
+        _isBlurred = isBlurred;
 
   // "id" field.
   String? _id;
@@ -55,6 +57,13 @@ class MediaItemDataStruct extends BaseStruct {
 
   bool hasOrderInPack() => _orderInPack != null;
 
+  // "isBlurred" field.
+  bool? _isBlurred;
+  bool get isBlurred => _isBlurred ?? false;
+  set isBlurred(bool? val) => _isBlurred = val;
+
+  bool hasIsBlurred() => _isBlurred != null;
+
   static MediaItemDataStruct fromMap(Map<String, dynamic> data) =>
       MediaItemDataStruct(
         id: data['id'] as String?,
@@ -62,6 +71,7 @@ class MediaItemDataStruct extends BaseStruct {
         storagePath: data['storagePath'] as String?,
         thumbnailStoragePath: data['thumbnailStoragePath'] as String?,
         orderInPack: castToType<int>(data['orderInPack']),
+        isBlurred: data['isBlurred'] as bool?,
       );
 
   static MediaItemDataStruct? maybeFromMap(dynamic data) => data is Map
@@ -74,6 +84,7 @@ class MediaItemDataStruct extends BaseStruct {
         'storagePath': _storagePath,
         'thumbnailStoragePath': _thumbnailStoragePath,
         'orderInPack': _orderInPack,
+        'isBlurred': _isBlurred,
       }.withoutNulls;
 
   @override
@@ -97,6 +108,10 @@ class MediaItemDataStruct extends BaseStruct {
         'orderInPack': serializeParam(
           _orderInPack,
           ParamType.int,
+        ),
+        'isBlurred': serializeParam(
+          _isBlurred,
+          ParamType.bool,
         ),
       }.withoutNulls;
 
@@ -127,6 +142,11 @@ class MediaItemDataStruct extends BaseStruct {
           ParamType.int,
           false,
         ),
+        isBlurred: deserializeParam(
+          data['isBlurred'],
+          ParamType.bool,
+          false,
+        ),
       );
 
   @override
@@ -139,12 +159,19 @@ class MediaItemDataStruct extends BaseStruct {
         mediaType == other.mediaType &&
         storagePath == other.storagePath &&
         thumbnailStoragePath == other.thumbnailStoragePath &&
-        orderInPack == other.orderInPack;
+        orderInPack == other.orderInPack &&
+        isBlurred == other.isBlurred;
   }
 
   @override
-  int get hashCode => const ListEquality()
-      .hash([id, mediaType, storagePath, thumbnailStoragePath, orderInPack]);
+  int get hashCode => const ListEquality().hash([
+        id,
+        mediaType,
+        storagePath,
+        thumbnailStoragePath,
+        orderInPack,
+        isBlurred
+      ]);
 }
 
 MediaItemDataStruct createMediaItemDataStruct({
@@ -153,6 +180,7 @@ MediaItemDataStruct createMediaItemDataStruct({
   String? storagePath,
   String? thumbnailStoragePath,
   int? orderInPack,
+  bool? isBlurred,
 }) =>
     MediaItemDataStruct(
       id: id,
@@ -160,4 +188,5 @@ MediaItemDataStruct createMediaItemDataStruct({
       storagePath: storagePath,
       thumbnailStoragePath: thumbnailStoragePath,
       orderInPack: orderInPack,
+      isBlurred: isBlurred,
     );

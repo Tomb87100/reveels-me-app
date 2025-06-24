@@ -1,4 +1,3 @@
-import '/component_vendeur_app/pack_item_shop_link/pack_item_shop_link_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
@@ -27,6 +26,8 @@ class _PublicShopViewPageWidgetState extends State<PublicShopViewPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PublicShopViewPageModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -164,23 +165,7 @@ class _PublicShopViewPageWidgetState extends State<PublicShopViewPageWidget> {
                       childAspectRatio: 0.9,
                     ),
                     scrollDirection: Axis.vertical,
-                    children: [
-                      wrapWithModel(
-                        model: _model.packItemShopLinkModel1,
-                        updateCallback: () => safeSetState(() {}),
-                        child: PackItemShopLinkWidget(),
-                      ),
-                      wrapWithModel(
-                        model: _model.packItemShopLinkModel2,
-                        updateCallback: () => safeSetState(() {}),
-                        child: PackItemShopLinkWidget(),
-                      ),
-                      wrapWithModel(
-                        model: _model.packItemShopLinkModel3,
-                        updateCallback: () => safeSetState(() {}),
-                        child: PackItemShopLinkWidget(),
-                      ),
-                    ],
+                    children: [],
                   ),
                 ),
                 FFButtonWidget(

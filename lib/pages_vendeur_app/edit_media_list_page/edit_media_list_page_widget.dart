@@ -30,6 +30,8 @@ class _EditMediaListPageWidgetState extends State<EditMediaListPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => EditMediaListPageModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override

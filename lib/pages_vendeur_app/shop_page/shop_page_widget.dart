@@ -1,34 +1,56 @@
+import '/backend/schema/structs/index.dart';
 import '/component_vendeur_app/nav_barre/nav_barre_widget.dart';
 import '/component_vendeur_app/pack_item_shop_link/pack_item_shop_link_widget.dart';
 import '/component_vendeur_app/promo_code_manager_component/promo_code_manager_component_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
+import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'seller_shop_page_model.dart';
-export 'seller_shop_page_model.dart';
+import 'package:provider/provider.dart';
+import 'shop_page_model.dart';
+export 'shop_page_model.dart';
 
-class SellerShopPageWidget extends StatefulWidget {
-  const SellerShopPageWidget({super.key});
+class ShopPageWidget extends StatefulWidget {
+  const ShopPageWidget({
+    super.key,
+    required this.shopSlug,
+  });
 
-  static String routeName = 'SellerShopPage';
-  static String routePath = '/sellerShopPage';
+  final String? shopSlug;
+
+  static String routeName = 'ShopPage';
+  static String routePath = '/shop/:shopSlug';
 
   @override
-  State<SellerShopPageWidget> createState() => _SellerShopPageWidgetState();
+  State<ShopPageWidget> createState() => _ShopPageWidgetState();
 }
 
-class _SellerShopPageWidgetState extends State<SellerShopPageWidget> {
-  late SellerShopPageModel _model;
+class _ShopPageWidgetState extends State<ShopPageWidget> {
+  late ShopPageModel _model;
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
     super.initState();
-    _model = createModel(context, () => SellerShopPageModel());
+    _model = createModel(context, () => ShopPageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.packsForThisShop = await actions.fetchPacksBySlug(
+        widget.shopSlug,
+      );
+      FFAppState().shopPacks =
+          _model.packsForThisShop!.toList().cast<PackDataStruct>();
+      safeSetState(() {});
+    });
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
 
   @override
@@ -40,6 +62,8 @@ class _SellerShopPageWidgetState extends State<SellerShopPageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -186,58 +210,78 @@ class _SellerShopPageWidgetState extends State<SellerShopPageWidget> {
                         ],
                       ),
                       Expanded(
-                        child: GridView(
-                          padding: EdgeInsets.zero,
-                          gridDelegate:
-                              SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 2,
-                            crossAxisSpacing: 0.0,
-                            mainAxisSpacing: 10.0,
-                            childAspectRatio: 0.9,
-                          ),
-                          primary: false,
-                          shrinkWrap: true,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            InkWell(
-                              splashColor: Colors.transparent,
-                              focusColor: Colors.transparent,
-                              hoverColor: Colors.transparent,
-                              highlightColor: Colors.transparent,
-                              onTap: () async {
-                                context.pushNamed(
-                                  PackManagementPageWidget.routeName,
-                                  extra: <String, dynamic>{
-                                    kTransitionInfoKey: TransitionInfo(
-                                      hasTransition: true,
-                                      transitionType: PageTransitionType.fade,
-                                      duration: Duration(milliseconds: 0),
+                        child: Builder(
+                          builder: (context) {
+                            final shopPackItem =
+                                FFAppState().shopPacks.toList();
+
+                            return GridView.builder(
+                              padding: EdgeInsets.zero,
+                              gridDelegate:
+                                  SliverGridDelegateWithFixedCrossAxisCount(
+                                crossAxisCount: 2,
+                                crossAxisSpacing: 0.0,
+                                mainAxisSpacing: 10.0,
+                                childAspectRatio: 0.9,
+                              ),
+                              primary: false,
+                              shrinkWrap: true,
+                              scrollDirection: Axis.vertical,
+                              itemCount: shopPackItem.length,
+                              itemBuilder: (context, shopPackItemIndex) {
+                                final shopPackItemItem =
+                                    shopPackItem[shopPackItemIndex];
+                                return wrapWithModel(
+                                  model: _model.packItemShopLinkModels.getModel(
+                                    shopPackItemItem.id,
+                                    shopPackItemIndex,
+                                  ),
+                                  updateCallback: () => safeSetState(() {}),
+                                  updateOnChange: true,
+                                  child: PackItemShopLinkWidget(
+                                    key: Key(
+                                      'Keyzbz_${shopPackItemItem.id}',
                                     ),
-                                  },
+                                    coverImage: shopPackItemItem
+                                                    .dedicatedCoverPath !=
+                                                ''
+                                        ? shopPackItemItem.dedicatedCoverPath
+                                        : shopPackItemItem.coverImagePath,
+                                    price: shopPackItemItem.baseSellerPrice,
+                                    numberMedias:
+                                        shopPackItemItem.mediaCount.toDouble(),
+                                    title: shopPackItemItem.name,
+                                    onTap: () async {
+                                      context.pushNamed(
+                                        PackManagementPageWidget.routeName,
+                                        queryParameters: {
+                                          'packId': serializeParam(
+                                            shopPackItemItem.id,
+                                            ParamType.String,
+                                          ),
+                                        }.withoutNulls,
+                                        extra: <String, dynamic>{
+                                          kTransitionInfoKey: TransitionInfo(
+                                            hasTransition: true,
+                                            transitionType:
+                                                PageTransitionType.fade,
+                                            duration: Duration(milliseconds: 0),
+                                          ),
+                                        },
+                                      );
+                                    },
+                                  ),
                                 );
                               },
-                              child: wrapWithModel(
-                                model: _model.packItemShopLinkModel1,
-                                updateCallback: () => safeSetState(() {}),
-                                child: PackItemShopLinkWidget(),
-                              ),
-                            ),
-                            wrapWithModel(
-                              model: _model.packItemShopLinkModel2,
-                              updateCallback: () => safeSetState(() {}),
-                              child: PackItemShopLinkWidget(),
-                            ),
-                            wrapWithModel(
-                              model: _model.packItemShopLinkModel3,
-                              updateCallback: () => safeSetState(() {}),
-                              child: PackItemShopLinkWidget(),
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                       FFButtonWidget(
-                        onPressed: () {
-                          print('Button pressed ...');
+                        onPressed: () async {
+                          await Clipboard.setData(ClipboardData(
+                              text:
+                                  'https://reveels.me/shop/${FFAppState().currentUserProfile.shopUrlSlug}'));
                         },
                         text: 'Partager ma boutique',
                         options: FFButtonOptions(

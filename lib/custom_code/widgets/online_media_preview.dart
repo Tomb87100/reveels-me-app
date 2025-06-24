@@ -5,6 +5,7 @@ import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom widgets
 import '/custom_code/actions/index.dart'; // Imports custom actions
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
@@ -15,6 +16,7 @@ import 'package:flutter/material.dart';
 // Imports nécessaires pour Flutter et pour appeler Supabase directement.
 // Imports nécessaires
 // Imports nécessaires
+import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 class OnlineMediaPreview extends StatefulWidget {
@@ -39,25 +41,24 @@ class _OnlineMediaPreviewState extends State<OnlineMediaPreview> {
   @override
   void initState() {
     super.initState();
-    // --- ESPION N°1 ---
-    print('--- WIDGET INIT ---');
-    print('1. Le widget OnlineMediaPreview est créé.');
-    print('2. Le storagePath reçu est: "${widget.storagePath}"');
-
     if (widget.storagePath != null && widget.storagePath!.isNotEmpty) {
-      // --- ESPION N°2 ---
-      print('3. La condition est VRAIE. Lancement de _fetchSignedUrl...');
       getSignedUrlFuture = _fetchSignedUrl();
-    } else {
-      // --- ESPION N°3 ---
-      print(
-          '3. La condition est FAUSSE. Le chemin est vide ou null. Pas d\'appel API.');
+    }
+  }
+
+  @override
+  void didUpdateWidget(OnlineMediaPreview oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (widget.storagePath != oldWidget.storagePath) {
+      if (widget.storagePath != null && widget.storagePath!.isNotEmpty) {
+        setState(() {
+          getSignedUrlFuture = _fetchSignedUrl();
+        });
+      }
     }
   }
 
   Future<String?> _fetchSignedUrl() async {
-    // --- ESPION N°4 ---
-    print('4. Entrée dans _fetchSignedUrl. Tentative d\'appel API...');
     try {
       final response = await Supabase.instance.client.functions.invoke(
         'getSignedUrls',
@@ -65,18 +66,15 @@ class _OnlineMediaPreviewState extends State<OnlineMediaPreview> {
           'filePaths': [widget.storagePath!]
         },
       );
-      // --- ESPION N°5 ---
-      print('5. APPEL API RÉUSSI. Réponse du serveur: ${response.data}');
       if (response.data != null) {
         final signedUrl =
             getJsonField(response.data, r'$[0].signedUrl').toString();
-        print('6. URL extraite: "$signedUrl"');
-        return signedUrl;
+        if (signedUrl.startsWith('http')) {
+          return signedUrl;
+        }
       }
       return null;
     } catch (e) {
-      // --- ESPION N°6 ---
-      print('7. ERREUR lors de l\'appel API: $e');
       return null;
     }
   }
@@ -84,30 +82,55 @@ class _OnlineMediaPreviewState extends State<OnlineMediaPreview> {
   @override
   Widget build(BuildContext context) {
     if (getSignedUrlFuture == null) {
-      // ... Le code pour le carré gris reste le même
-      return Container(/*...*/);
+      return Container(
+        width: widget.width ?? 150,
+        height: widget.height ?? 150,
+        decoration: BoxDecoration(
+          color: Color(0xFFF1F4F8),
+          borderRadius: BorderRadius.circular(8),
+        ),
+      );
     }
 
     return FutureBuilder<String?>(
       future: getSignedUrlFuture,
       builder: (context, snapshot) {
-        // ... Le reste du code du FutureBuilder est le même
         if (snapshot.connectionState == ConnectionState.waiting) {
           return Container(
-              /*...*/ child: Center(child: CircularProgressIndicator()));
+            width: widget.width ?? 150,
+            height: widget.height ?? 150,
+            decoration: BoxDecoration(
+              color: Color(0xFFF1F4F8),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Center(child: CircularProgressIndicator()),
+          );
         }
+
         if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          // --- ESPION N°7 ---
-          print('ERREUR DANS FUTUREBUILDER. Erreur: ${snapshot.error}');
           return Container(
-              /*...*/ child:
-                  Icon(Icons.error_outline, color: Colors.redAccent));
+            width: widget.width ?? 150,
+            height: widget.height ?? 150,
+            decoration: BoxDecoration(
+              color: Color(0xFFF1F4F8),
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Icon(Icons.error_outline, color: Colors.redAccent),
+          );
         }
+
         final signedUrl = snapshot.data!;
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
-          child: Image.network(signedUrl, fit: BoxFit.cover),
+          child: Image.network(
+            signedUrl,
+            width: widget.width ?? 150,
+            height: widget.height ?? 150,
+            fit: BoxFit.cover,
+          ),
         );
+        // La ligne manquante était ici. Le compilateur n'était pas certain
+        // que tous les chemins possibles retournaient un widget.
       },
     );
   }

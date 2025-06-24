@@ -4,58 +4,59 @@ import '/backend/supabase/supabase.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import 'index.dart'; // Imports other custom actions
+import '/flutter_flow/custom_functions.dart'; // Imports custom functions
 import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'package:mime/mime.dart'; // <-- AJOUT DE L'IMPORT
+import 'dart:io';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:mime/mime.dart';
 
 Future<MediaItemDataStruct> uploadFilesAndCreateRecord(
-  FFUploadedFile originalFile,
+  LocalFileDataStruct originalFile, // <-- ARGUMENT MODIFIÉ
   FFUploadedFile? thumbnailFile,
   String sellerId,
 ) async {
-  final String originalFileName = originalFile.name ?? 'fichier_inconnu';
+  final sanitizedFileName =
+      (originalFile.name).replaceAll(RegExp(r'[^\w.\-]+'), '_');
+
+  // On crée l'objet File à partir du chemin stocké dans notre structure
+  final fileToUpload = File(originalFile.path);
+
   final String mediaType = (thumbnailFile != null) ? 'video' : 'image';
-  final int fileSize = originalFile.bytes?.length ?? 0;
+  final int fileSize = await fileToUpload.length();
   String originalStoragePath = '';
   String? thumbnailStoragePath;
 
-  // 1. Upload du fichier original
-  if (originalFile.bytes != null) {
-    // --- MODIFICATION ICI ---
-    // On détecte le type MIME du fichier original
-    final mimeType =
-        lookupMimeType(originalFileName) ?? 'application/octet-stream';
-    final path =
-        '$sellerId/${DateTime.now().millisecondsSinceEpoch}_$originalFileName';
+  // On utilise upload() avec un objet File, au lieu de uploadBinary() avec des bytes
+  final mimeType =
+      lookupMimeType(sanitizedFileName) ?? 'application/octet-stream';
+  final path =
+      '$sellerId/${DateTime.now().millisecondsSinceEpoch}_$sanitizedFileName';
 
-    await Supabase.instance.client.storage.from('pack-media').uploadBinary(
-          path,
-          originalFile.bytes!,
-          // On ajoute les options de fichier avec le type de contenu
-          fileOptions: FileOptions(contentType: mimeType, upsert: true),
-        );
-    originalStoragePath = path;
-  }
+  await Supabase.instance.client.storage.from('pack-media').upload(
+        path,
+        fileToUpload, // On passe l'objet File directement
+        fileOptions: FileOptions(contentType: mimeType, upsert: true),
+      );
+  originalStoragePath = path;
 
-  // 2. Upload de la miniature si elle existe
+  // Le reste de la fonction (upload de miniature, insert, return) est inchangé...
   if (thumbnailFile != null && thumbnailFile.bytes != null) {
-    // La miniature est toujours un JPEG, donc on peut forcer le type.
     final thumbMimeType = 'image/jpeg';
-    final path =
-        '$sellerId/${DateTime.now().millisecondsSinceEpoch}_${thumbnailFile.name}';
-
+    final sanitizedThumbName = (thumbnailFile.name ?? 'thumbnail.jpg')
+        .replaceAll(RegExp(r'[^\w.\-]+'), '_');
+    final thumbPath =
+        '$sellerId/${DateTime.now().millisecondsSinceEpoch}_$sanitizedThumbName';
     await Supabase.instance.client.storage.from('pack-media').uploadBinary(
-          path,
+          thumbPath,
           thumbnailFile.bytes!,
-          // On ajoute aussi les options ici
           fileOptions: FileOptions(contentType: thumbMimeType, upsert: true),
         );
-    thumbnailStoragePath = path;
+    thumbnailStoragePath = thumbPath;
   }
 
-  // 3. Création de l'enregistrement dans la base de données
   final response = await Supabase.instance.client
       .from('media_items')
       .insert({
@@ -64,13 +65,16 @@ Future<MediaItemDataStruct> uploadFilesAndCreateRecord(
         'storage_path': originalStoragePath,
         'thumbnail_storage_path': thumbnailStoragePath,
         'pack_id': null,
-        'file_name_original': originalFileName,
+        'file_name_original': originalFile.name,
         'file_size_bytes': fileSize,
+        // ... dans l'objet .insert()
+        'is_blurred':
+            true, // On sauvegarde le média comme étant flouté par défaut
+// ...
       })
       .select('id, created_at')
       .single();
 
-  // On construit la structure de retour manuellement
   return MediaItemDataStruct(
     id: response['id'],
     mediaType: mediaType,

@@ -8,8 +8,7 @@ export '/pages_vendeur_app/pack_management_page/pack_management_page_widget.dart
     show PackManagementPageWidget;
 export '/pages_vendeur_app/my_packs_page/my_packs_page_widget.dart'
     show MyPacksPageWidget;
-export '/pages_vendeur_app/seller_shop_page/seller_shop_page_widget.dart'
-    show SellerShopPageWidget;
+export '/pages_vendeur_app/shop_page/shop_page_widget.dart' show ShopPageWidget;
 export '/pages_vendeur_app/profile_page/profile_page_widget.dart'
     show ProfilePageWidget;
 export '/pages_vendeur_app/financials_history_page/financials_history_page_widget.dart'
