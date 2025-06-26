@@ -69,4 +69,13 @@ class SalesRow extends SupabaseDataRow {
 
   DateTime get saleDate => getField<DateTime>('sale_date')!;
   set saleDate(DateTime value) => setField<DateTime>('sale_date', value);
+
+  String get status => getField<String>('status')!;
+  set status(String value) => setField<String>('status', value);
+
+  DateTime? get availableAt => getField<DateTime>('available_at');
+  set availableAt(DateTime? value) => setField<DateTime>('available_at', value);
+
+  String? get payoutId => getField<String>('payout_id');
+  set payoutId(String? value) => setField<String>('payout_id', value);
 }

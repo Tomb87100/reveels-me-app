@@ -1,4 +1,3 @@
-import '/backend/schema/structs/index.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/index.dart';
 import 'auth1_widget.dart' show Auth1Widget;
@@ -23,8 +22,6 @@ class Auth1Model extends FlutterFlowModel<Auth1Widget> {
   TextEditingController? passwordTextController;
   late bool passwordVisibility;
   String? Function(BuildContext, String?)? passwordTextControllerValidator;
-  // Stores action output result for [Custom Action - fetchCurrentUserProfile] action in Button widget.
-  ProfileDataStruct? fetchedProfile;
   // State field(s) for emailAddress_Create widget.
   FocusNode? emailAddressCreateFocusNode;
   TextEditingController? emailAddressCreateTextController;
@@ -42,8 +39,6 @@ class Auth1Model extends FlutterFlowModel<Auth1Widget> {
   late bool passwordConfirmVisibility;
   String? Function(BuildContext, String?)?
       passwordConfirmTextControllerValidator;
-  // Stores action output result for [Custom Action - fetchCurrentUserProfile] action in Button widget.
-  ProfileDataStruct? fetchedProfileLogged;
 
   @override
   void initState(BuildContext context) {

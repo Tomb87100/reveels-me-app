@@ -13,39 +13,35 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<ProfileDataStruct?> fetchCurrentUserProfile() async {
   final supabase = Supabase.instance.client;
-  // On récupère l'utilisateur actuellement connecté
   final user = supabase.auth.currentUser;
 
-  // S'il n'y a personne de connecté, on ne fait rien.
   if (user == null) {
+    print('fetchCurrentUserProfile: Utilisateur non connecté.');
     return null;
   }
 
   try {
-    // On interroge la table 'profiles' pour la ligne qui correspond à notre utilisateur
-    final response = await supabase
-        .from('profiles')
-        .select()
-        .eq('id', user.id)
-        .single(); // On s'attend à une seule ligne en retour
+    final response =
+        await supabase.from('profiles').select().eq('id', user.id).single();
 
-    if (response == null) {
-      return null; // Profil non trouvé
-    }
-
-    // On convertit manuellement la réponse en notre DataType pour être sûr
+    // Mapping sécurisé et explicite des noms de colonnes de la base de données
+    // vers les champs de notre DataType FlutterFlow.
     return ProfileDataStruct(
       id: response['id'],
       email: response['email'],
-      publicName: response['public_name'],
-      publicBio: response['public_bio'],
-      avatarUrl: response['avatar_url'],
-      shopUrlSlug: response['shop_url_slug'],
-      stripeAccountId: response['stripe_account_id'],
-      stripeKycStatus: response['stripe_kyc_status'],
+      publicName:
+          response['public_name'], // Correspond à la colonne public_name
+      publicBio: response['public_bio'], // Correspond à la colonne public_bio
+      avatarUrl: response['avatar_url'], // Correspond à la colonne avatar_url
+      shopUrlSlug:
+          response['shop_url_slug'], // Correspond à la colonne shop_url_slug
+      stripeAccountId: response[
+          'stripe_account_id'], // Correspond à la colonne stripe_account_id
+      stripeKycStatus: response[
+          'stripe_kyc_status'], // Correspond à la colonne stripe_kyc_status
     );
   } catch (e) {
-    print('Erreur lors du chargement du profil utilisateur: $e');
+    print('Erreur critique lors du chargement du profil utilisateur: $e');
     return null;
   }
 }

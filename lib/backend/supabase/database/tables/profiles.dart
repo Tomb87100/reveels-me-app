@@ -45,4 +45,13 @@ class ProfilesRow extends SupabaseDataRow {
 
   DateTime? get updatedAt => getField<DateTime>('updated_at');
   set updatedAt(DateTime? value) => setField<DateTime>('updated_at', value);
+
+  double get commissionRateSeller =>
+      getField<double>('commission_rate_seller')!;
+  set commissionRateSeller(double value) =>
+      setField<double>('commission_rate_seller', value);
+
+  double get commissionRateBuyer => getField<double>('commission_rate_buyer')!;
+  set commissionRateBuyer(double value) =>
+      setField<double>('commission_rate_buyer', value);
 }
