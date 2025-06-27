@@ -1,16 +1,25 @@
+import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import 'dart:ui';
+import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'public_pack_view_page_model.dart';
 export 'public_pack_view_page_model.dart';
 
 class PublicPackViewPageWidget extends StatefulWidget {
-  const PublicPackViewPageWidget({super.key});
+  const PublicPackViewPageWidget({
+    super.key,
+    required this.packSlug,
+  });
+
+  final String? packSlug;
 
   static String routeName = 'PublicPackViewPage';
-  static String routePath = '/publicPackViewPage';
+  static String routePath = '/publicPackViewPage/:packSlug';
 
   @override
   State<PublicPackViewPageWidget> createState() =>
@@ -26,6 +35,31 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PublicPackViewPageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.packSlugAPI = await GetPublicPackDetailsAPICall.call(
+        slug: widget.packSlug,
+      );
+
+      if ((_model.packSlugAPI?.succeeded ?? true)) {
+        _model.packData = (_model.packSlugAPI?.jsonBody ?? '');
+        safeSetState(() {});
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'Le call API a échoué',
+              style: TextStyle(
+                color: Colors.white,
+              ),
+            ),
+            duration: Duration(milliseconds: 4000),
+            backgroundColor: FlutterFlowTheme.of(context).tertiary,
+          ),
+        );
+      }
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -167,7 +201,13 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                             width: MediaQuery.sizeOf(context).width * 0.8,
                             decoration: BoxDecoration(),
                             child: Text(
-                              'Titre du pack juste ici',
+                              valueOrDefault<String>(
+                                getJsonField(
+                                  _model.packData,
+                                  r'''$.name''',
+                                )?.toString(),
+                                'Titre',
+                              ),
                               style: FlutterFlowTheme.of(context)
                                   .bodyMedium
                                   .override(
@@ -193,12 +233,37 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                           decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(20.0),
                           ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20.0),
-                            child: Image.asset(
-                              'assets/images/SCR-20250611-legh.png',
-                              fit: BoxFit.cover,
-                            ),
+                          child: Stack(
+                            children: [
+                              Container(
+                                width: MediaQuery.sizeOf(context).width * 0.8,
+                                height: 300.0,
+                                child: custom_widgets.PublicImageViewer(
+                                  width: MediaQuery.sizeOf(context).width * 0.8,
+                                  height: 300.0,
+                                  imageUrl: getJsonField(
+                                    _model.packData,
+                                    r'''$.signedCoverUrl''',
+                                  ).toString(),
+                                ),
+                              ),
+                              Container(
+                                width: MediaQuery.sizeOf(context).width * 0.8,
+                                height: double.infinity,
+                                decoration: BoxDecoration(
+                                  color: Color(0x7FF4F4F4),
+                                ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(0.0),
+                                  child: BackdropFilter(
+                                    filter: ImageFilter.blur(
+                                      sigmaX: 10.0,
+                                      sigmaY: 10.0,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                         Align(
@@ -209,68 +274,60 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                             decoration: BoxDecoration(),
                             child: Align(
                               alignment: AlignmentDirectional(0.0, -1.0),
-                              child: ListView(
-                                padding: EdgeInsets.zero,
-                                primary: false,
-                                scrollDirection: Axis.horizontal,
-                                children: [
-                                  Align(
-                                    alignment: AlignmentDirectional(-1.0, -1.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.asset(
-                                        'assets/images/SCR-20250611-legh.png',
+                              child: Builder(
+                                builder: (context) {
+                                  final mediaItemJSON = getJsonField(
+                                    _model.packData,
+                                    r'''$.signedMediaDisplayUrls''',
+                                  ).toList();
+
+                                  return ListView.separated(
+                                    padding: EdgeInsets.zero,
+                                    primary: false,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: mediaItemJSON.length,
+                                    separatorBuilder: (_, __) =>
+                                        SizedBox(width: 10.0),
+                                    itemBuilder: (context, mediaItemJSONIndex) {
+                                      final mediaItemJSONItem =
+                                          mediaItemJSON[mediaItemJSONIndex];
+                                      return Container(
                                         width: 50.0,
                                         height: 50.0,
-                                        fit: BoxFit.cover,
-                                        cacheWidth: 50,
-                                        cacheHeight: 50,
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(-1.0, -1.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.asset(
-                                        'assets/images/SCR-20250611-legh.png',
-                                        width: 50.0,
-                                        height: 50.0,
-                                        fit: BoxFit.cover,
-                                        cacheWidth: 50,
-                                        cacheHeight: 50,
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(-1.0, -1.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.asset(
-                                        'assets/images/SCR-20250611-legh.png',
-                                        width: 50.0,
-                                        height: 50.0,
-                                        fit: BoxFit.cover,
-                                        cacheWidth: 50,
-                                        cacheHeight: 50,
-                                      ),
-                                    ),
-                                  ),
-                                  Align(
-                                    alignment: AlignmentDirectional(-1.0, -1.0),
-                                    child: ClipRRect(
-                                      borderRadius: BorderRadius.circular(8.0),
-                                      child: Image.asset(
-                                        'assets/images/SCR-20250611-legh.png',
-                                        width: 50.0,
-                                        height: 50.0,
-                                        fit: BoxFit.cover,
-                                        cacheWidth: 50,
-                                        cacheHeight: 50,
-                                      ),
-                                    ),
-                                  ),
-                                ].divide(SizedBox(width: 10.0)),
+                                        child: Stack(
+                                          children: [
+                                            Container(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              child: custom_widgets
+                                                  .PublicImageViewer(
+                                                width: 50.0,
+                                                height: 50.0,
+                                                imageUrl: mediaItemJSONItem
+                                                    .toString(),
+                                              ),
+                                            ),
+                                            Container(
+                                              width: 50.0,
+                                              height: 50.0,
+                                              decoration: BoxDecoration(
+                                                color: Color(0x7F878787),
+                                              ),
+                                              child: ClipRect(
+                                                child: ImageFiltered(
+                                                  imageFilter: ImageFilter.blur(
+                                                    sigmaX: 2.0,
+                                                    sigmaY: 2.0,
+                                                  ),
+                                                ),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  );
+                                },
                               ),
                             ),
                           ),
@@ -309,7 +366,13 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                                         ),
                                   ),
                                   Text(
-                                    'Dans ce pack vous retrouverez 4 médias privés lors d\'une soirée.',
+                                    valueOrDefault<String>(
+                                      getJsonField(
+                                        _model.packData,
+                                        r'''$.description''',
+                                      )?.toString(),
+                                      'Description ',
+                                    ),
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(
@@ -366,7 +429,10 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Text(
-                                    '12.00€',
+                                    '${getJsonField(
+                                      _model.packData,
+                                      r'''$.base_seller_price''',
+                                    ).toString()} €',
                                     style: FlutterFlowTheme.of(context)
                                         .bodyMedium
                                         .override(

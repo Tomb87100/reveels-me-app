@@ -10,12 +10,10 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-// Code Corrigé pour OnlineMediaPreview
-// Imports nécessaires pour faire fonctionner le widget avec FlutterFlow et les appels API.
-// Imports nécessaires pour faire fonctionner le widget avec FlutterFlow et les appels API.
-// Imports nécessaires pour Flutter et pour appeler Supabase directement.
-// Imports nécessaires
-// Imports nécessaires
+import 'index.dart';
+import '/custom_code/actions/index.dart';
+import '/flutter_flow/custom_functions.dart';
+
 import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -23,11 +21,13 @@ class OnlineMediaPreview extends StatefulWidget {
   const OnlineMediaPreview({
     Key? key,
     this.storagePath,
+    this.publicUrl, // NOUVEAU : Pour les URLs déjà signées
     this.width,
     this.height,
   }) : super(key: key);
 
   final String? storagePath;
+  final String? publicUrl; // NOUVEAU PARAMÈTRE
   final double? width;
   final double? height;
 
@@ -36,32 +36,47 @@ class OnlineMediaPreview extends StatefulWidget {
 }
 
 class _OnlineMediaPreviewState extends State<OnlineMediaPreview> {
-  Future<String?>? getSignedUrlFuture;
+  Future<String?>? getDisplayUrlFuture;
 
   @override
   void initState() {
     super.initState();
-    if (widget.storagePath != null && widget.storagePath!.isNotEmpty) {
-      getSignedUrlFuture = _fetchSignedUrl();
-    }
+    _initializeUrl();
   }
 
   @override
   void didUpdateWidget(OnlineMediaPreview oldWidget) {
     super.didUpdateWidget(oldWidget);
-    if (widget.storagePath != oldWidget.storagePath) {
-      if (widget.storagePath != null && widget.storagePath!.isNotEmpty) {
-        setState(() {
-          getSignedUrlFuture = _fetchSignedUrl();
-        });
-      }
+    // On met à jour si publicUrl ou storagePath changent.
+    if (widget.publicUrl != oldWidget.publicUrl ||
+        widget.storagePath != oldWidget.storagePath) {
+      setState(() {
+        _initializeUrl();
+      });
     }
   }
 
-  Future<String?> _fetchSignedUrl() async {
+  void _initializeUrl() {
+    // Logique améliorée :
+    // 1. Priorité à l'URL publique déjà signée.
+    if (widget.publicUrl != null && widget.publicUrl!.isNotEmpty) {
+      getDisplayUrlFuture = Future.value(widget.publicUrl);
+    }
+    // 2. Sinon, on utilise l'ancienne méthode pour l'appli connectée.
+    else if (widget.storagePath != null && widget.storagePath!.isNotEmpty) {
+      getDisplayUrlFuture = _fetchSignedUrlFromEdgeFunction();
+    }
+    // 3. Sinon, on n'a rien à afficher.
+    else {
+      getDisplayUrlFuture = null;
+    }
+  }
+
+  // Cette fonction est l'ancienne logique, elle ne sera utilisée que pour l'appli connectée.
+  Future<String?> _fetchSignedUrlFromEdgeFunction() async {
     try {
       final response = await Supabase.instance.client.functions.invoke(
-        'getSignedUrls',
+        'getSignedUrls', // Votre fonction existante
         body: {
           'filePaths': [widget.storagePath!]
         },
@@ -75,62 +90,59 @@ class _OnlineMediaPreviewState extends State<OnlineMediaPreview> {
       }
       return null;
     } catch (e) {
+      print('Erreur dans _fetchSignedUrlFromEdgeFunction: $e');
       return null;
     }
   }
 
+  // Widget pour afficher un placeholder en cas de chargement ou d'erreur.
+  Widget _buildPlaceholder({Widget? child}) {
+    return Container(
+      width: widget.width ?? 150,
+      height: widget.height ?? 150,
+      decoration: BoxDecoration(
+        color: Color(0xFFF1F4F8),
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: child,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    if (getSignedUrlFuture == null) {
-      return Container(
-        width: widget.width ?? 150,
-        height: widget.height ?? 150,
-        decoration: BoxDecoration(
-          color: Color(0xFFF1F4F8),
-          borderRadius: BorderRadius.circular(8),
-        ),
-      );
+    if (getDisplayUrlFuture == null) {
+      return _buildPlaceholder();
     }
 
     return FutureBuilder<String?>(
-      future: getSignedUrlFuture,
+      future: getDisplayUrlFuture,
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
-          return Container(
-            width: widget.width ?? 150,
-            height: widget.height ?? 150,
-            decoration: BoxDecoration(
-              color: Color(0xFFF1F4F8),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Center(child: CircularProgressIndicator()),
-          );
+          return _buildPlaceholder(
+              child: Center(child: CircularProgressIndicator()));
         }
 
         if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-          return Container(
-            width: widget.width ?? 150,
-            height: widget.height ?? 150,
-            decoration: BoxDecoration(
-              color: Color(0xFFF1F4F8),
-              borderRadius: BorderRadius.circular(8),
-            ),
-            child: Icon(Icons.error_outline, color: Colors.redAccent),
-          );
+          return _buildPlaceholder(
+              child: Icon(Icons.error_outline, color: Colors.redAccent));
         }
 
-        final signedUrl = snapshot.data!;
+        final url = snapshot.data!;
+        // On affiche toujours une image, comme vous l'avez demandé.
         return ClipRRect(
           borderRadius: BorderRadius.circular(8),
           child: Image.network(
-            signedUrl,
+            url,
             width: widget.width ?? 150,
             height: widget.height ?? 150,
             fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              // Affiche une icône d'erreur différente si le chargement de l'URL échoue.
+              return _buildPlaceholder(
+                  child: Icon(Icons.broken_image_outlined, color: Colors.grey));
+            },
           ),
         );
-        // La ligne manquante était ici. Le compilateur n'était pas certain
-        // que tous les chemins possibles retournaient un widget.
       },
     );
   }

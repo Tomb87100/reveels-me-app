@@ -26,10 +26,10 @@
         <key>CFBundleTypeRole</key>
         <string>Editor</string>
         <key>CFBundleURLName</key>
-        <string>reveelsmev3.com</string>
+        <string>reveels.me</string>
         <key>CFBundleURLSchemes</key>
         <array>
-        <string>reveelsmev3</string>
+        <string>reveels.me</string>
         </array>
         </dict>
     </array>

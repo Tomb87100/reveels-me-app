@@ -141,7 +141,12 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: PublicPackViewPageWidget.routeName,
           path: PublicPackViewPageWidget.routePath,
-          builder: (context, params) => PublicPackViewPageWidget(),
+          builder: (context, params) => PublicPackViewPageWidget(
+            packSlug: params.getParam(
+              'packSlug',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: PublicShopViewPageWidget.routeName,

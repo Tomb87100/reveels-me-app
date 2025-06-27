@@ -47,7 +47,7 @@
                 <action android:name="android.intent.action.VIEW" />
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
-                <data android:scheme="reveelsmev3" android:host="reveelsmev3.com" />
+                <data android:scheme="reveels.me" android:host="reveels.me" />
             </intent-filter>
 
         </activity>

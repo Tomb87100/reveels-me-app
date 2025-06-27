@@ -934,7 +934,7 @@ class _PackManagementPageWidgetState extends State<PackManagementPageWidget> {
                         onPressed: () async {
                           await Clipboard.setData(ClipboardData(
                               text:
-                                  'https://reveels.me/pack/${_model.currentPack?.packSlug}'));
+                                  'https://reveels.me/publicPackViewPage/${_model.currentPack?.packSlug}'));
                           await showDialog(
                             context: context,
                             builder: (alertDialogContext) {

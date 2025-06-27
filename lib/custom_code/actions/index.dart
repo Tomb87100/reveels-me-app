@@ -10,3 +10,4 @@ export 'select_and_upload_cover_image.dart' show selectAndUploadCoverImage;
 export 'fetch_current_user_profile.dart' show fetchCurrentUserProfile;
 export 'fetch_packs_by_slug.dart' show fetchPacksBySlug;
 export 'get_full_pack_details.dart' show getFullPackDetails;
+export 'get_public_pack_by_slug.dart' show getPublicPackBySlug;
