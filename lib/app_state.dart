@@ -131,6 +131,12 @@ class FFAppState extends ChangeNotifier {
   void insertAtIndexInShopPacks(int index, PackDataStruct value) {
     shopPacks.insert(index, value);
   }
+
+  bool _isStripeInitialized = false;
+  bool get isStripeInitialized => _isStripeInitialized;
+  set isStripeInitialized(bool value) {
+    _isStripeInitialized = value;
+  }
 }
 
 void _safeInit(Function() initializeField) {

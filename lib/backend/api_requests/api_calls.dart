@@ -221,6 +221,12 @@ class CreatePaymentIntentCall {
       alwaysAllowBody: false,
     );
   }
+
+  static String? clientSecret(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.clientSecret''',
+      ));
 }
 
 class ApiPagingParams {

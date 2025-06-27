@@ -10,11 +10,7 @@ import 'package:flutter/material.dart';
 // Begin custom widget code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
-import 'index.dart'; // Imports other custom widgets
-
-// Importez le package Stripe
 import 'package:flutter_stripe/flutter_stripe.dart';
-// LIGNE CORRIGÉE : AJOUT DE L'IMPORT POUR GOOGLE FONTS
 import 'package:google_fonts/google_fonts.dart';
 
 class StripePaymentForm extends StatefulWidget {
@@ -34,12 +30,39 @@ class StripePaymentForm extends StatefulWidget {
 }
 
 class _StripePaymentFormState extends State<StripePaymentForm> {
+  // Flag pour s'assurer que Stripe n'est initialisé qu'une seule fois.
+  static bool _stripeInitialized = false;
+
   final controller = CardEditController();
   bool _isLoading = false;
+  bool _isInitializing = true; // Nouvel état pour gérer l'initialisation
 
   @override
   void initState() {
     super.initState();
+    _initializeStripe();
+  }
+
+  Future<void> _initializeStripe() async {
+    // Si ce n'est pas déjà fait, on initialise Stripe.
+    if (!_stripeInitialized) {
+      try {
+        // !! IMPORTANT !! Remplacez par votre clé PUBLISHABLE de test
+        Stripe.publishableKey =
+            'pk_test_51ReAjgPD7CtFOTws2zGCyYYBWcjK6uGcHuDvda7ksQN9DEy4CMvcGtEpZuk2Hf4Vup7HdZFRIYhqKfprgW2ZKa8K00QanymteB';
+        Stripe.merchantIdentifier = 'merchant.com.your.app';
+        await Stripe.instance.applySettings();
+        _stripeInitialized =
+            true; // On met le flag à true pour ne pas le refaire
+      } catch (e) {
+        print('Failed to initialize Stripe: $e');
+        // Gérer l'erreur si nécessaire
+      }
+    }
+    // Une fois l'initialisation terminée (ou si elle était déjà faite), on affiche le formulaire
+    setState(() {
+      _isInitializing = false;
+    });
     controller.addListener(update);
   }
 
@@ -53,6 +76,7 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
   }
 
   Future<void> _handlePayPress() async {
+    // ... (le reste de la fonction ne change pas)
     if (!controller.complete) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
@@ -60,25 +84,20 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
       );
       return;
     }
-
     setState(() {
       _isLoading = true;
     });
-
     try {
       final paymentIntent = await Stripe.instance.confirmPayment(
         paymentIntentClientSecret: widget.clientSecret,
         data: PaymentMethodParams.card(
-          paymentMethodData: PaymentMethodData(
-            billingDetails: BillingDetails(),
-          ),
+          paymentMethodData:
+              PaymentMethodData(billingDetails: BillingDetails()),
         ),
       );
-
       setState(() {
         _isLoading = false;
       });
-
       context.pushNamed(
         'PurchaseSuccessPage',
         queryParameters: {
@@ -97,6 +116,12 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
 
   @override
   Widget build(BuildContext context) {
+    // Tant que Stripe s'initialise, on affiche un loader.
+    if (_isInitializing) {
+      return Center(child: CircularProgressIndicator());
+    }
+
+    // Le reste du widget est identique
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -121,16 +146,7 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
           onPressed: _isLoading ? null : _handlePayPress,
           child: _isLoading
               ? CircularProgressIndicator(color: Colors.white)
-              : Text(
-                  'Payer en toute sécurité',
-                  style: FlutterFlowTheme.of(context).titleSmall.override(
-                        font: GoogleFonts.interTight(
-                          fontWeight: FontWeight.w500,
-                        ),
-                        color: Colors.white,
-                        fontSize: 18,
-                      ),
-                ),
+              : Text('Payer en toute sécurité'),
           style: ElevatedButton.styleFrom(
             backgroundColor: FlutterFlowTheme.of(context).primary,
             minimumSize: Size(double.infinity, 50),

@@ -501,9 +501,11 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                                   ),
                                   FFButtonWidget(
                                     onPressed: () async {
-                                      showModalBottomSheet(
+                                      await showModalBottomSheet(
                                         isScrollControlled: true,
-                                        backgroundColor: Colors.transparent,
+                                        backgroundColor:
+                                            FlutterFlowTheme.of(context)
+                                                .primaryBackground,
                                         useSafeArea: true,
                                         context: context,
                                         builder: (context) {
