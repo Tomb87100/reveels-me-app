@@ -190,6 +190,39 @@ class GetPublicPackDetailsAPICall {
           .toList();
 }
 
+class CreatePaymentIntentCall {
+  static Future<ApiCallResponse> call({
+    String? packId = '',
+    String? buyerEmail = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "packId": "${escapeStringForJson(packId)}",
+  "buyerEmail": "${escapeStringForJson(buyerEmail)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'createPaymentIntent',
+      apiUrl:
+          'https://rpbxzrmvioqqajffaufc.supabase.co/functions/v1/create-payment-intent',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwYnh6cm12aW9xcWFqZmZhdWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNjM0MTEsImV4cCI6MjA2NTczOTQxMX0.6aRDjYzfxjpR7z7sJmqDGpE2RcoKF2yTdgL8thVRrdI',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+}
+
 class ApiPagingParams {
   int nextPageNumber = 0;
   int numItems = 0;
