@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 // Begin custom action code
 // DO NOT REMOVE OR MODIFY THE CODE ABOVE!
 
+import 'dart:async';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 Future<ProfileDataStruct?> fetchCurrentUserProfile() async {
@@ -16,34 +17,61 @@ Future<ProfileDataStruct?> fetchCurrentUserProfile() async {
   final user = supabase.auth.currentUser;
 
   if (user == null) {
-    print('fetchCurrentUserProfile: Utilisateur non connecté.');
+    print('❌ [PROFIL] Echec: Utilisateur non connecté.');
     return null;
   }
 
-  try {
-    final response =
-        await supabase.from('profiles').select().eq('id', user.id).single();
+  // --- Mécanisme de Réessai ---
+  const maxRetries = 3;
+  const delayBetweenRetries =
+      Duration(milliseconds: 500); // On augmente un peu le délai
 
-    // Mapping sécurisé et explicite des noms de colonnes de la base de données
-    // vers les champs de notre DataType FlutterFlow.
-    return ProfileDataStruct(
-      id: response['id'],
-      email: response['email'],
-      publicName:
-          response['public_name'], // Correspond à la colonne public_name
-      publicBio: response['public_bio'], // Correspond à la colonne public_bio
-      avatarUrl: response['avatar_url'], // Correspond à la colonne avatar_url
-      shopUrlSlug:
-          response['shop_url_slug'], // Correspond à la colonne shop_url_slug
-      stripeAccountId: response[
-          'stripe_account_id'], // Correspond à la colonne stripe_account_id
-      stripeKycStatus: response[
-          'stripe_kyc_status'], // Correspond à la colonne stripe_kyc_status
-    );
-  } catch (e) {
-    print('Erreur critique lors du chargement du profil utilisateur: $e');
-    return null;
+  for (int i = 0; i < maxRetries; i++) {
+    try {
+      print('▶️ [PROFIL] Tentative ${i + 1}/$maxRetries de chargement...');
+
+      // LA MODIFICATION CLÉ : On n'utilise plus .single()
+      // On fait une requête simple qui ne plantera pas si elle ne trouve rien.
+      final response =
+          await supabase.from('profiles').select().eq('id', user.id);
+
+      // On vérifie manuellement si la réponse contient des données.
+      if (response.isNotEmpty) {
+        // La réponse est une liste, on prend le premier élément.
+        final profileData = response.first;
+        print('✅ [PROFIL] Profil trouvé ! Données brutes : $profileData');
+
+        final profile = ProfileDataStruct(
+          id: profileData['id'] ?? '',
+          email: profileData['email'] ?? '',
+          publicName: profileData['public_name'] ?? '',
+          publicBio: profileData['public_bio'] ?? '',
+          avatarUrl: profileData['avatar_url'] ?? '',
+          shopUrlSlug: profileData['shop_url_slug'] ?? '',
+          stripeAccountId: profileData['stripe_account_id'] ?? '',
+          stripeKycStatus: profileData['stripe_kyc_status'] ?? '',
+        );
+
+        print(
+            '✅ [PROFIL] Profil converti avec succès. shopUrlSlug: ${profile.shopUrlSlug}');
+        // Si tout a réussi, on retourne le profil et on arrête la fonction ici.
+        return profile;
+      } else {
+        // Si la réponse est vide, on le signale et on passe à la tentative suivante.
+        throw 'Profil non trouvé (0 lignes retournées).';
+      }
+    } catch (e) {
+      print('⚠️ [PROFIL] Tentative ${i + 1} échouée. Erreur: $e');
+      if (i < maxRetries - 1) {
+        await Future.delayed(delayBetweenRetries);
+      } else {
+        print('❌ [PROFIL] Echec final après $maxRetries tentatives.');
+        return null;
+      }
+    }
   }
+  return null;
 }
+
 // Set your action name, define your arguments and return parameter,
 // and then add the boilerplate code using the green button on the right!

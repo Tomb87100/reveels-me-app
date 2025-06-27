@@ -1,10 +1,13 @@
+import '/backend/api_requests/api_calls.dart';
 import '/component_vendeur_app/item_transaction_virement/item_transaction_virement_widget.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/custom_code/actions/index.dart' as actions;
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
 import 'financials_history_page_model.dart';
 export 'financials_history_page_model.dart';
 
@@ -42,6 +45,8 @@ class _FinancialsHistoryPageWidgetState
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return GestureDetector(
       onTap: () {
         FocusScope.of(context).unfocus();
@@ -172,8 +177,50 @@ class _FinancialsHistoryPageWidgetState
                 ].divide(SizedBox(height: 5.0)),
               ),
               FFButtonWidget(
-                onPressed: () {
-                  print('Button pressed ...');
+                onPressed: () async {
+                  if (FFAppState().currentUserProfile.stripeAccountId == '') {
+                    _model.userAuthToken = await actions.getAuthToken();
+                    _model.stripeApiResponse =
+                        await CreateStripeConnectAccountCall.call(
+                      authToken: _model.userAuthToken,
+                    );
+
+                    if ((_model.stripeApiResponse?.succeeded ?? true)) {
+                      await launchURL(getJsonField(
+                        (_model.stripeApiResponse?.jsonBody ?? ''),
+                        r'''$.url''',
+                      ).toString());
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Erreur call API',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).tertiary,
+                        ),
+                      );
+                    }
+                  } else {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(
+                        content: Text(
+                          'Votre compte est déjà configuré. La fonction de virement arrive bientôt !',
+                          style: TextStyle(
+                            color: Colors.white,
+                          ),
+                        ),
+                        duration: Duration(milliseconds: 4000),
+                        backgroundColor: FlutterFlowTheme.of(context).secondary,
+                      ),
+                    );
+                  }
+
+                  safeSetState(() {});
                 },
                 text: 'Effectuer un virement',
                 options: FFButtonOptions(
