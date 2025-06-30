@@ -12,10 +12,10 @@ export 'checkout_bottom_sheet_model.dart';
 class CheckoutBottomSheetWidget extends StatefulWidget {
   const CheckoutBottomSheetWidget({
     super.key,
-    required this.packId,
+    required this.packSlug,
   });
 
-  final String? packId;
+  final String? packSlug;
 
   @override
   State<CheckoutBottomSheetWidget> createState() =>
@@ -173,17 +173,25 @@ class _CheckoutBottomSheetWidgetState extends State<CheckoutBottomSheetWidget> {
                       FFButtonWidget(
                         onPressed: () async {
                           if (_model.textFieldEmailTextController.text != '') {
-                            _model.paymentIntentResponse =
+                            _model.packDetailsResponse =
+                                await GetPublicPackDetailsAPICall.call(
+                              slug: widget.packSlug,
+                            );
+
+                            _model.reponsePaiementAPI =
                                 await CreatePaymentIntentCall.call(
-                              packId: widget.packId,
+                              packId: getJsonField(
+                                (_model.packDetailsResponse?.jsonBody ?? ''),
+                                r'''$.id''',
+                              ).toString(),
                               buyerEmail:
                                   _model.textFieldEmailTextController.text,
                             );
 
-                            if ((_model.paymentIntentResponse?.succeeded ??
+                            if ((_model.reponsePaiementAPI?.succeeded ??
                                 true)) {
                               _model.clientSecret = getJsonField(
-                                (_model.paymentIntentResponse?.jsonBody ?? ''),
+                                (_model.reponsePaiementAPI?.jsonBody ?? ''),
                                 r'''$.clientSecret''',
                               ).toString();
                               safeSetState(() {});

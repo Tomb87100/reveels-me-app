@@ -522,10 +522,7 @@ class _PublicPackViewPageWidgetState extends State<PublicPackViewPageWidget> {
                                                 height: 200.0,
                                                 child:
                                                     CheckoutBottomSheetWidget(
-                                                  packId: getJsonField(
-                                                    _model.packData,
-                                                    r'''$.id''',
-                                                  ).toString(),
+                                                  packSlug: widget.packSlug!,
                                                 ),
                                               ),
                                             ),

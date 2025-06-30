@@ -13,6 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_stripe/flutter_stripe.dart';
 import 'package:google_fonts/google_fonts.dart';
 
+// This is the new, web-safe version of the Stripe Payment Form.
 class StripePaymentForm extends StatefulWidget {
   const StripePaymentForm({
     Key? key,
@@ -30,12 +31,10 @@ class StripePaymentForm extends StatefulWidget {
 }
 
 class _StripePaymentFormState extends State<StripePaymentForm> {
-  // Flag pour s'assurer que Stripe n'est initialisé qu'une seule fois.
   static bool _stripeInitialized = false;
-
   final controller = CardEditController();
   bool _isLoading = false;
-  bool _isInitializing = true; // Nouvel état pour gérer l'initialisation
+  bool _isReady = false;
 
   @override
   void initState() {
@@ -44,25 +43,19 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
   }
 
   Future<void> _initializeStripe() async {
-    // Si ce n'est pas déjà fait, on initialise Stripe.
+    // This logic ensures Stripe is only initialized once per app session.
     if (!_stripeInitialized) {
-      try {
-        // !! IMPORTANT !! Remplacez par votre clé PUBLISHABLE de test
-        Stripe.publishableKey =
-            'pk_test_51ReAjgPD7CtFOTws2zGCyYYBWcjK6uGcHuDvda7ksQN9DEy4CMvcGtEpZuk2Hf4Vup7HdZFRIYhqKfprgW2ZKa8K00QanymteB';
-        Stripe.merchantIdentifier = 'merchant.com.your.app';
-        await Stripe.instance.applySettings();
-        _stripeInitialized =
-            true; // On met le flag à true pour ne pas le refaire
-      } catch (e) {
-        print('Failed to initialize Stripe: $e');
-        // Gérer l'erreur si nécessaire
-      }
+      // For web and mobile card payments, only setting the publishable key is needed.
+      // The applySettings() call was causing the web-specific crash.
+      Stripe.publishableKey = 'pk_test_VOTRE_CLÉ_PUBLISHABLE_ICI';
+      _stripeInitialized = true;
     }
-    // Une fois l'initialisation terminée (ou si elle était déjà faite), on affiche le formulaire
-    setState(() {
-      _isInitializing = false;
-    });
+    // Once the key is set, we can build the widget.
+    if (mounted) {
+      setState(() {
+        _isReady = true;
+      });
+    }
     controller.addListener(update);
   }
 
@@ -76,8 +69,7 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
   }
 
   Future<void> _handlePayPress() async {
-    // ... (le reste de la fonction ne change pas)
-    if (!controller.complete) {
+    if (!_isReady || !controller.complete) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
             content: Text('Veuillez remplir tous les champs de la carte.')),
@@ -116,12 +108,10 @@ class _StripePaymentFormState extends State<StripePaymentForm> {
 
   @override
   Widget build(BuildContext context) {
-    // Tant que Stripe s'initialise, on affiche un loader.
-    if (_isInitializing) {
+    if (!_isReady) {
       return Center(child: CircularProgressIndicator());
     }
 
-    // Le reste du widget est identique
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [

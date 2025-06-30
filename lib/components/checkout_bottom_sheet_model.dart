@@ -16,8 +16,10 @@ class CheckoutBottomSheetModel
   TextEditingController? textFieldEmailTextController;
   String? Function(BuildContext, String?)?
       textFieldEmailTextControllerValidator;
+  // Stores action output result for [Backend Call - API (getPublicPackDetailsAPI)] action in Button widget.
+  ApiCallResponse? packDetailsResponse;
   // Stores action output result for [Backend Call - API (createPaymentIntent)] action in Button widget.
-  ApiCallResponse? paymentIntentResponse;
+  ApiCallResponse? reponsePaiementAPI;
 
   @override
   void initState(BuildContext context) {}
