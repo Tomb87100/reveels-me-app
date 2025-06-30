@@ -190,7 +190,7 @@ class GetPublicPackDetailsAPICall {
           .toList();
 }
 
-class CreatePaymentIntentCall {
+class CreateCheckoutSessionCall {
   static Future<ApiCallResponse> call({
     String? packId = '',
     String? buyerEmail = '',
@@ -201,9 +201,9 @@ class CreatePaymentIntentCall {
   "buyerEmail": "${escapeStringForJson(buyerEmail)}"
 }''';
     return ApiManager.instance.makeApiCall(
-      callName: 'createPaymentIntent',
+      callName: 'createCheckoutSession',
       apiUrl:
-          'https://rpbxzrmvioqqajffaufc.supabase.co/functions/v1/create-payment-intent',
+          'https://rpbxzrmvioqqajffaufc.supabase.co/functions/v1/create-checkout-session',
       callType: ApiCallType.POST,
       headers: {
         'Content-Type': 'application/json',
@@ -226,6 +226,11 @@ class CreatePaymentIntentCall {
       castToType<String>(getJsonField(
         response,
         r'''$.clientSecret''',
+      ));
+  static String? sessionUrl(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.sessionUrl''',
       ));
 }
 

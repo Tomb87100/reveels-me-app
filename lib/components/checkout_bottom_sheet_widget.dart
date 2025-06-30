@@ -2,7 +2,6 @@ import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
-import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'package:easy_debounce/easy_debounce.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -61,215 +60,189 @@ class _CheckoutBottomSheetWidgetState extends State<CheckoutBottomSheetWidget> {
             decoration: BoxDecoration(
               color: FlutterFlowTheme.of(context).primaryBackground,
             ),
-            child: Builder(
-              builder: (context) {
-                if (_model.clientSecret == null || _model.clientSecret == '') {
-                  return Column(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: double.infinity,
-                        decoration: BoxDecoration(),
-                        child: Container(
-                          width: 200.0,
-                          child: TextFormField(
-                            controller: _model.textFieldEmailTextController,
-                            focusNode: _model.textFieldEmailFocusNode,
-                            onChanged: (_) => EasyDebounce.debounce(
-                              '_model.textFieldEmailTextController',
-                              Duration(milliseconds: 2000),
-                              () => safeSetState(() {}),
-                            ),
-                            autofocus: false,
-                            obscureText: false,
-                            decoration: InputDecoration(
-                              isDense: false,
-                              hintText: 'Email',
-                              hintStyle: FlutterFlowTheme.of(context)
-                                  .labelMedium
-                                  .override(
-                                    font: GoogleFonts.inter(
-                                      fontWeight: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontWeight,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .labelMedium
-                                          .fontStyle,
-                                    ),
-                                    fontSize: 16.0,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontWeight,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .labelMedium
-                                        .fontStyle,
-                                  ),
-                              enabledBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              focusedBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: Color(0x00000000),
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              errorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              focusedErrorBorder: OutlineInputBorder(
-                                borderSide: BorderSide(
-                                  color: FlutterFlowTheme.of(context).error,
-                                  width: 1.0,
-                                ),
-                                borderRadius: BorderRadius.circular(24.0),
-                              ),
-                              filled: true,
-                              fillColor: FlutterFlowTheme.of(context)
-                                  .secondaryBackground,
-                              contentPadding: EdgeInsetsDirectional.fromSTEB(
-                                  20.0, 20.0, 18.0, 20.0),
-                            ),
-                            style: FlutterFlowTheme.of(context)
-                                .bodyMedium
-                                .override(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(),
+                  child: Container(
+                    width: 200.0,
+                    child: TextFormField(
+                      controller: _model.textFieldEmailTextController,
+                      focusNode: _model.textFieldEmailFocusNode,
+                      onChanged: (_) => EasyDebounce.debounce(
+                        '_model.textFieldEmailTextController',
+                        Duration(milliseconds: 2000),
+                        () => safeSetState(() {}),
+                      ),
+                      autofocus: false,
+                      obscureText: false,
+                      decoration: InputDecoration(
+                        isDense: false,
+                        hintText: 'Email',
+                        hintStyle:
+                            FlutterFlowTheme.of(context).labelMedium.override(
                                   font: GoogleFonts.inter(
                                     fontWeight: FlutterFlowTheme.of(context)
-                                        .bodyMedium
+                                        .labelMedium
                                         .fontWeight,
                                     fontStyle: FlutterFlowTheme.of(context)
-                                        .bodyMedium
+                                        .labelMedium
                                         .fontStyle,
                                   ),
                                   fontSize: 16.0,
                                   letterSpacing: 0.0,
                                   fontWeight: FlutterFlowTheme.of(context)
-                                      .bodyMedium
+                                      .labelMedium
                                       .fontWeight,
                                   fontStyle: FlutterFlowTheme.of(context)
-                                      .bodyMedium
+                                      .labelMedium
                                       .fontStyle,
                                 ),
-                            textAlign: TextAlign.start,
-                            maxLines: null,
-                            cursorColor:
-                                FlutterFlowTheme.of(context).primaryText,
-                            validator: _model
-                                .textFieldEmailTextControllerValidator
-                                .asValidator(context),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1.0,
                           ),
-                        ),
-                      ),
-                      FFButtonWidget(
-                        onPressed: () async {
-                          if (_model.textFieldEmailTextController.text != '') {
-                            _model.packDetailsResponse =
-                                await GetPublicPackDetailsAPICall.call(
-                              slug: widget.packSlug,
-                            );
-
-                            _model.reponsePaiementAPI =
-                                await CreatePaymentIntentCall.call(
-                              packId: getJsonField(
-                                (_model.packDetailsResponse?.jsonBody ?? ''),
-                                r'''$.id''',
-                              ).toString(),
-                              buyerEmail:
-                                  _model.textFieldEmailTextController.text,
-                            );
-
-                            if ((_model.reponsePaiementAPI?.succeeded ??
-                                true)) {
-                              _model.clientSecret = getJsonField(
-                                (_model.reponsePaiementAPI?.jsonBody ?? ''),
-                                r'''$.clientSecret''',
-                              ).toString();
-                              safeSetState(() {});
-                            } else {
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                SnackBar(
-                                  content: Text(
-                                    'Le call API a échoué',
-                                    style: TextStyle(
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  duration: Duration(milliseconds: 4000),
-                                  backgroundColor:
-                                      FlutterFlowTheme.of(context).tertiary,
-                                ),
-                              );
-                            }
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              SnackBar(
-                                content: Text(
-                                  'Remplissez votre email',
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                duration: Duration(milliseconds: 4000),
-                                backgroundColor:
-                                    FlutterFlowTheme.of(context).tertiary,
-                              ),
-                            );
-                          }
-
-                          safeSetState(() {});
-                        },
-                        text: 'Soumettre mon email',
-                        options: FFButtonOptions(
-                          width: double.infinity,
-                          height: 50.0,
-                          padding: EdgeInsetsDirectional.fromSTEB(
-                              16.0, 0.0, 16.0, 0.0),
-                          iconPadding: EdgeInsetsDirectional.fromSTEB(
-                              0.0, 0.0, 0.0, 0.0),
-                          color: FlutterFlowTheme.of(context).primary,
-                          textStyle:
-                              FlutterFlowTheme.of(context).titleSmall.override(
-                                    font: GoogleFonts.interTight(
-                                      fontWeight: FontWeight.w500,
-                                      fontStyle: FlutterFlowTheme.of(context)
-                                          .titleSmall
-                                          .fontStyle,
-                                    ),
-                                    color: Colors.white,
-                                    letterSpacing: 0.0,
-                                    fontWeight: FontWeight.w500,
-                                    fontStyle: FlutterFlowTheme.of(context)
-                                        .titleSmall
-                                        .fontStyle,
-                                  ),
-                          elevation: 0.0,
                           borderRadius: BorderRadius.circular(24.0),
                         ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: Color(0x00000000),
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                        errorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).error,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                        focusedErrorBorder: OutlineInputBorder(
+                          borderSide: BorderSide(
+                            color: FlutterFlowTheme.of(context).error,
+                            width: 1.0,
+                          ),
+                          borderRadius: BorderRadius.circular(24.0),
+                        ),
+                        filled: true,
+                        fillColor:
+                            FlutterFlowTheme.of(context).secondaryBackground,
+                        contentPadding: EdgeInsetsDirectional.fromSTEB(
+                            20.0, 20.0, 18.0, 20.0),
                       ),
-                    ].divide(SizedBox(height: 10.0)),
-                  );
-                } else {
-                  return Container(
-                    width: double.infinity,
-                    height: 300.0,
-                    child: custom_widgets.StripePaymentForm(
-                      width: double.infinity,
-                      height: 300.0,
-                      clientSecret: _model.clientSecret!,
+                      style: FlutterFlowTheme.of(context).bodyMedium.override(
+                            font: GoogleFonts.inter(
+                              fontWeight: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontWeight,
+                              fontStyle: FlutterFlowTheme.of(context)
+                                  .bodyMedium
+                                  .fontStyle,
+                            ),
+                            fontSize: 16.0,
+                            letterSpacing: 0.0,
+                            fontWeight: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontWeight,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .bodyMedium
+                                .fontStyle,
+                          ),
+                      textAlign: TextAlign.start,
+                      maxLines: null,
+                      cursorColor: FlutterFlowTheme.of(context).primaryText,
+                      validator: _model.textFieldEmailTextControllerValidator
+                          .asValidator(context),
                     ),
-                  );
-                }
-              },
+                  ),
+                ),
+                FFButtonWidget(
+                  onPressed: () async {
+                    if (_model.textFieldEmailTextController.text != '') {
+                      _model.packDetailsResponse =
+                          await GetPublicPackDetailsAPICall.call(
+                        slug: widget.packSlug,
+                      );
+
+                      _model.paymentIntentResponse =
+                          await CreateCheckoutSessionCall.call(
+                        packId: getJsonField(
+                          (_model.packDetailsResponse?.jsonBody ?? ''),
+                          r'''$.id''',
+                        ).toString(),
+                        buyerEmail: _model.textFieldEmailTextController.text,
+                      );
+
+                      if ((_model.paymentIntentResponse?.succeeded ?? true)) {
+                        await launchURL(getJsonField(
+                          (_model.paymentIntentResponse?.jsonBody ?? ''),
+                          r'''$.sessionUrl''',
+                        ).toString());
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text(
+                              'Le call API a échoué',
+                              style: TextStyle(
+                                color: Colors.white,
+                              ),
+                            ),
+                            duration: Duration(milliseconds: 4000),
+                            backgroundColor:
+                                FlutterFlowTheme.of(context).tertiary,
+                          ),
+                        );
+                      }
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(
+                          content: Text(
+                            'Remplissez votre email',
+                            style: TextStyle(
+                              color: Colors.white,
+                            ),
+                          ),
+                          duration: Duration(milliseconds: 4000),
+                          backgroundColor:
+                              FlutterFlowTheme.of(context).tertiary,
+                        ),
+                      );
+                    }
+
+                    safeSetState(() {});
+                  },
+                  text: 'Soumettre mon email',
+                  options: FFButtonOptions(
+                    width: double.infinity,
+                    height: 50.0,
+                    padding:
+                        EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 0.0),
+                    iconPadding:
+                        EdgeInsetsDirectional.fromSTEB(0.0, 0.0, 0.0, 0.0),
+                    color: FlutterFlowTheme.of(context).primary,
+                    textStyle: FlutterFlowTheme.of(context).titleSmall.override(
+                          font: GoogleFonts.interTight(
+                            fontWeight: FontWeight.w500,
+                            fontStyle: FlutterFlowTheme.of(context)
+                                .titleSmall
+                                .fontStyle,
+                          ),
+                          color: Colors.white,
+                          letterSpacing: 0.0,
+                          fontWeight: FontWeight.w500,
+                          fontStyle:
+                              FlutterFlowTheme.of(context).titleSmall.fontStyle,
+                        ),
+                    elevation: 0.0,
+                    borderRadius: BorderRadius.circular(24.0),
+                  ),
+                ),
+              ].divide(SizedBox(height: 10.0)),
             ),
           ),
         ],
