@@ -7,7 +7,16 @@ import 'item_transaction_virement_model.dart';
 export 'item_transaction_virement_model.dart';
 
 class ItemTransactionVirementWidget extends StatefulWidget {
-  const ItemTransactionVirementWidget({super.key});
+  const ItemTransactionVirementWidget({
+    super.key,
+    required this.statut,
+    required this.date,
+    required this.montant,
+  });
+
+  final String? statut;
+  final String? date;
+  final double? montant;
 
   @override
   State<ItemTransactionVirementWidget> createState() =>
@@ -42,7 +51,7 @@ class _ItemTransactionVirementWidgetState
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: 100.0,
+      width: 300.0,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(0.0),
       ),
@@ -72,7 +81,10 @@ class _ItemTransactionVirementWidgetState
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Validé',
+                  valueOrDefault<String>(
+                    widget.statut,
+                    'En attente',
+                  ),
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         font: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,
@@ -87,7 +99,7 @@ class _ItemTransactionVirementWidgetState
                       ),
                 ),
                 Text(
-                  'Paiement le 12/04/2024',
+                  'Paiement du ${widget.date}',
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         font: GoogleFonts.inter(
                           fontWeight: FontWeight.w300,
@@ -107,7 +119,10 @@ class _ItemTransactionVirementWidgetState
               child: Align(
                 alignment: AlignmentDirectional(1.0, 0.0),
                 child: Text(
-                  '30.00€',
+                  '${valueOrDefault<String>(
+                    widget.montant?.toString(),
+                    '0',
+                  )} €',
                   style: FlutterFlowTheme.of(context).bodyMedium.override(
                         font: GoogleFonts.inter(
                           fontWeight: FontWeight.w600,

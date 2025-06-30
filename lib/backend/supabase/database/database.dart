@@ -16,4 +16,5 @@ export 'tables/sale_items.dart';
 export 'tables/sales.dart';
 export 'tables/seller_financial_summary_view.dart';
 export 'tables/media_items.dart';
+export 'tables/seller_financial_summary.dart';
 export 'tables/promo_codes.dart';

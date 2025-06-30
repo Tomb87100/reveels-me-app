@@ -78,4 +78,7 @@ class SalesRow extends SupabaseDataRow {
 
   String? get payoutId => getField<String>('payout_id');
   set payoutId(String? value) => setField<String>('payout_id', value);
+
+  String? get packId => getField<String>('pack_id');
+  set packId(String? value) => setField<String>('pack_id', value);
 }

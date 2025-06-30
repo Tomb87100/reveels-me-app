@@ -238,6 +238,8 @@ dynamic deserializeParam<T>(
             return SellerFinancialSummaryViewRow(data);
           case MediaItemsRow:
             return MediaItemsRow(data);
+          case SellerFinancialSummaryRow:
+            return SellerFinancialSummaryRow(data);
           case PromoCodesRow:
             return PromoCodesRow(data);
           default:

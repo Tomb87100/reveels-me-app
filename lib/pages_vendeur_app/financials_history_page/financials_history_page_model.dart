@@ -12,22 +12,19 @@ class FinancialsHistoryPageModel
   String? userAuthToken;
   // Stores action output result for [Backend Call - API (createStripeConnectAccount)] action in Button widget.
   ApiCallResponse? stripeApiResponse;
+  // Stores action output result for [Backend Call - API (requestPayout)] action in Button widget.
+  ApiCallResponse? payoutResponse;
   // Model for ItemTransactionVirement component.
-  late ItemTransactionVirementModel itemTransactionVirementModel1;
-  // Model for ItemTransactionVirement component.
-  late ItemTransactionVirementModel itemTransactionVirementModel2;
+  late ItemTransactionVirementModel itemTransactionVirementModel;
 
   @override
   void initState(BuildContext context) {
-    itemTransactionVirementModel1 =
-        createModel(context, () => ItemTransactionVirementModel());
-    itemTransactionVirementModel2 =
+    itemTransactionVirementModel =
         createModel(context, () => ItemTransactionVirementModel());
   }
 
   @override
   void dispose() {
-    itemTransactionVirementModel1.dispose();
-    itemTransactionVirementModel2.dispose();
+    itemTransactionVirementModel.dispose();
   }
 }
