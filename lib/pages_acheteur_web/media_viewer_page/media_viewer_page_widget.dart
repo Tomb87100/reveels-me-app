@@ -1,10 +1,8 @@
-import '/backend/api_requests/api_calls.dart';
 import '/flutter_flow/flutter_flow_icon_button.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/custom_code/widgets/index.dart' as custom_widgets;
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'media_viewer_page_model.dart';
 export 'media_viewer_page_model.dart';
 
@@ -34,13 +32,6 @@ class _MediaViewerPageWidgetState extends State<MediaViewerPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => MediaViewerPageModel());
-
-    // On page load action.
-    SchedulerBinding.instance.addPostFrameCallback((_) async {
-      _model.mediaResponse = await GetPurchasedPackMediaCall.call(
-        sessionId: widget.mediaUrl,
-      );
-    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
