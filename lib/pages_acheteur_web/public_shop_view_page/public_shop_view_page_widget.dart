@@ -1,16 +1,25 @@
+import '/backend/api_requests/api_calls.dart';
+import '/component_vendeur_app/pack_item_shop_link/pack_item_shop_link_widget.dart';
 import '/flutter_flow/flutter_flow_theme.dart';
 import '/flutter_flow/flutter_flow_util.dart';
 import '/flutter_flow/flutter_flow_widgets.dart';
+import '/index.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'public_shop_view_page_model.dart';
 export 'public_shop_view_page_model.dart';
 
 class PublicShopViewPageWidget extends StatefulWidget {
-  const PublicShopViewPageWidget({super.key});
+  const PublicShopViewPageWidget({
+    super.key,
+    this.shopSlug,
+  });
+
+  final String? shopSlug;
 
   static String routeName = 'PublicShopViewPage';
-  static String routePath = '/publicShopViewPage';
+  static String routePath = '/PublicShopViewPage/:shopSlug';
 
   @override
   State<PublicShopViewPageWidget> createState() =>
@@ -26,6 +35,13 @@ class _PublicShopViewPageWidgetState extends State<PublicShopViewPageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => PublicShopViewPageModel());
+
+    // On page load action.
+    SchedulerBinding.instance.addPostFrameCallback((_) async {
+      _model.shopDataResponse = await GetPublicShopDataCall.call(
+        shopSlug: widget.shopSlug,
+      );
+    });
 
     WidgetsBinding.instance.addPostFrameCallback((_) => safeSetState(() {}));
   }
@@ -156,16 +172,86 @@ class _PublicShopViewPageWidgetState extends State<PublicShopViewPageWidget> {
                   ],
                 ),
                 Expanded(
-                  child: GridView(
-                    padding: EdgeInsets.zero,
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                      crossAxisCount: 2,
-                      crossAxisSpacing: 0.0,
-                      mainAxisSpacing: 10.0,
-                      childAspectRatio: 0.9,
-                    ),
-                    scrollDirection: Axis.vertical,
-                    children: [],
+                  child: Builder(
+                    builder: (context) {
+                      final packItem = getJsonField(
+                        (_model.shopDataResponse?.jsonBody ?? ''),
+                        r'''$.packs''',
+                      ).toList();
+
+                      return GridView.builder(
+                        padding: EdgeInsets.zero,
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          crossAxisSpacing: 0.0,
+                          mainAxisSpacing: 10.0,
+                          childAspectRatio: 0.9,
+                        ),
+                        primary: false,
+                        shrinkWrap: true,
+                        scrollDirection: Axis.vertical,
+                        itemCount: packItem.length,
+                        itemBuilder: (context, packItemIndex) {
+                          final packItemItem = packItem[packItemIndex];
+                          return wrapWithModel(
+                            model: _model.packItemShopLinkModels.getModel(
+                              getJsonField(
+                                packItemItem,
+                                r'''$.id''',
+                              ).toString(),
+                              packItemIndex,
+                            ),
+                            updateCallback: () => safeSetState(() {}),
+                            updateOnChange: true,
+                            child: PackItemShopLinkWidget(
+                              key: Key(
+                                'Keya40_${getJsonField(
+                                  packItemItem,
+                                  r'''$.id''',
+                                ).toString()}',
+                              ),
+                              coverImage: getJsonField(
+                                packItemItem,
+                                r'''$.signedCoverUrl''',
+                              ).toString(),
+                              price: getJsonField(
+                                packItemItem,
+                                r'''$.base_seller_price''',
+                              ),
+                              numberMedias: getJsonField(
+                                packItemItem,
+                                r'''$.media_count''',
+                              ),
+                              title: getJsonField(
+                                packItemItem,
+                                r'''$.name''',
+                              ).toString(),
+                              onTap: () async {
+                                context.pushNamed(
+                                  PublicPackViewPageWidget.routeName,
+                                  pathParameters: {
+                                    'packSlug': serializeParam(
+                                      getJsonField(
+                                        packItemItem,
+                                        r'''$.pack_slug''',
+                                      ).toString(),
+                                      ParamType.String,
+                                    ),
+                                  }.withoutNulls,
+                                  extra: <String, dynamic>{
+                                    kTransitionInfoKey: TransitionInfo(
+                                      hasTransition: true,
+                                      transitionType: PageTransitionType.fade,
+                                      duration: Duration(milliseconds: 0),
+                                    ),
+                                  },
+                                );
+                              },
+                            ),
+                          );
+                        },
+                      );
+                    },
                   ),
                 ),
                 FFButtonWidget(

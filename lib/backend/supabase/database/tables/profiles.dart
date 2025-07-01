@@ -29,8 +29,8 @@ class ProfilesRow extends SupabaseDataRow {
   String? get avatarUrl => getField<String>('avatar_url');
   set avatarUrl(String? value) => setField<String>('avatar_url', value);
 
-  String? get shopUrlSlug => getField<String>('shop_url_slug');
-  set shopUrlSlug(String? value) => setField<String>('shop_url_slug', value);
+  String? get shopSlug => getField<String>('shop_slug');
+  set shopSlug(String? value) => setField<String>('shop_slug', value);
 
   String? get stripeAccountId => getField<String>('stripe_account_id');
   set stripeAccountId(String? value) =>
@@ -54,4 +54,7 @@ class ProfilesRow extends SupabaseDataRow {
   double get commissionRateBuyer => getField<double>('commission_rate_buyer')!;
   set commissionRateBuyer(double value) =>
       setField<double>('commission_rate_buyer', value);
+
+  bool? get isPublic => getField<bool>('is_public');
+  set isPublic(bool? value) => setField<bool>('is_public', value);
 }

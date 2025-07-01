@@ -194,7 +194,7 @@ class _NavBarreWidgetState extends State<NavBarreWidget> {
 
                     context.pushNamed(
                       ShopPageWidget.routeName,
-                      pathParameters: {
+                      queryParameters: {
                         'shopSlug': serializeParam(
                           FFAppState().currentUserProfile.shopUrlSlug,
                           ParamType.String,

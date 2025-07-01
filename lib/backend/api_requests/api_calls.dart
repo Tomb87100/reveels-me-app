@@ -190,6 +190,281 @@ class GetPublicPackDetailsAPICall {
           .toList();
 }
 
+class GetPublicShopDataCall {
+  static Future<ApiCallResponse> call({
+    String? shopSlug = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "shopSlug": "${escapeStringForJson(shopSlug)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getPublicShopData',
+      apiUrl:
+          'https://rpbxzrmvioqqajffaufc.supabase.co/functions/v1/get-public-shop-data',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwYnh6cm12aW9xcWFqZmZhdWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNjM0MTEsImV4cCI6MjA2NTczOTQxMX0.6aRDjYzfxjpR7z7sJmqDGpE2RcoKF2yTdgL8thVRrdI',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static String? id(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.id''',
+      ));
+  static String? sellerid(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.seller_id''',
+      ));
+  static String? packslug(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.pack_slug''',
+      ));
+  static String? name(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.name''',
+      ));
+  static int? basesellerprice(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.base_seller_price''',
+      ));
+  static String? coverimagepath(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.cover_image_path''',
+      ));
+  static String? createdat(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.created_at''',
+      ));
+  static String? shopurlslug(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.shop_url_slug''',
+      ));
+  static int? mediacount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.media_count''',
+      ));
+  static String? signedcoverurl(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.signedCoverUrl''',
+      ));
+  static List<String>? signedmediaurls(dynamic response) => (getJsonField(
+        response,
+        r'''$.signedMediaUrls''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static String? description(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.description''',
+      ));
+  static String? dedicatedcoverpath(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.dedicated_cover_path''',
+      ));
+  static List? signedmediaitems(dynamic response) => getJsonField(
+        response,
+        r'''$.signedMediaItems''',
+        true,
+      ) as List?;
+  static List<String>? signedmediaitemstype(dynamic response) => (getJsonField(
+        response,
+        r'''$.signedMediaItems[:].type''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? signedmediaitemspath(dynamic response) => (getJsonField(
+        response,
+        r'''$.signedMediaItems[:].path''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static dynamic seller(dynamic response) => getJsonField(
+        response,
+        r'''$.seller''',
+      );
+  static String? sellerId(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.seller.id''',
+      ));
+  static String? sellerShopSlug(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.seller.shop_slug''',
+      ));
+  static List? packs(dynamic response) => getJsonField(
+        response,
+        r'''$.packs''',
+        true,
+      ) as List?;
+}
+
+class GetPurchasedPackMediaCall {
+  static Future<ApiCallResponse> call({
+    String? sessionId = '',
+  }) async {
+    final ffApiRequestBody = '''
+{
+  "sessionId": "${escapeStringForJson(sessionId)}"
+}''';
+    return ApiManager.instance.makeApiCall(
+      callName: 'getPurchasedPackMedia',
+      apiUrl:
+          'https://rpbxzrmvioqqajffaufc.supabase.co/functions/v1/get-purchased-pack-media',
+      callType: ApiCallType.POST,
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey':
+            'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InJwYnh6cm12aW9xcWFqZmZhdWZjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTAxNjM0MTEsImV4cCI6MjA2NTczOTQxMX0.6aRDjYzfxjpR7z7sJmqDGpE2RcoKF2yTdgL8thVRrdI',
+      },
+      params: {},
+      body: ffApiRequestBody,
+      bodyType: BodyType.JSON,
+      returnBody: true,
+      encodeBodyUtf8: false,
+      decodeUtf8: false,
+      cache: false,
+      isStreamingApi: false,
+      alwaysAllowBody: false,
+    );
+  }
+
+  static String? id(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.id''',
+      ));
+  static String? sellerid(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.seller_id''',
+      ));
+  static String? packslug(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.pack_slug''',
+      ));
+  static String? name(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.name''',
+      ));
+  static int? basesellerprice(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.base_seller_price''',
+      ));
+  static String? coverimagepath(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.cover_image_path''',
+      ));
+  static String? createdat(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.created_at''',
+      ));
+  static String? shopurlslug(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.shop_url_slug''',
+      ));
+  static int? mediacount(dynamic response) => castToType<int>(getJsonField(
+        response,
+        r'''$.media_count''',
+      ));
+  static String? signedcoverurl(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.signedCoverUrl''',
+      ));
+  static List<String>? signedmediaurls(dynamic response) => (getJsonField(
+        response,
+        r'''$.signedMediaUrls''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static String? description(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.description''',
+      ));
+  static String? dedicatedcoverpath(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.dedicated_cover_path''',
+      ));
+  static List? signedmediaitems(dynamic response) => getJsonField(
+        response,
+        r'''$.signedMediaItems''',
+        true,
+      ) as List?;
+  static List<String>? signedmediaitemstype(dynamic response) => (getJsonField(
+        response,
+        r'''$.signedMediaItems[:].type''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static List<String>? signedmediaitemspath(dynamic response) => (getJsonField(
+        response,
+        r'''$.signedMediaItems[:].path''',
+        true,
+      ) as List?)
+          ?.withoutNulls
+          .map((x) => castToType<String>(x))
+          .withoutNulls
+          .toList();
+  static dynamic seller(dynamic response) => getJsonField(
+        response,
+        r'''$.seller''',
+      );
+  static String? sellerId(dynamic response) => castToType<String>(getJsonField(
+        response,
+        r'''$.seller.id''',
+      ));
+  static String? sellerShopSlug(dynamic response) =>
+      castToType<String>(getJsonField(
+        response,
+        r'''$.seller.shop_slug''',
+      ));
+  static List? packs(dynamic response) => getJsonField(
+        response,
+        r'''$.packs''',
+        true,
+      ) as List?;
+  static List? media(dynamic response) => getJsonField(
+        response,
+        r'''$.media''',
+        true,
+      ) as List?;
+}
+
 class CreateCheckoutSessionCall {
   static Future<ApiCallResponse> call({
     String? packId = '',

@@ -24,7 +24,7 @@ class ShopPageWidget extends StatefulWidget {
   final String? shopSlug;
 
   static String routeName = 'ShopPage';
-  static String routePath = '/shop/:shopSlug';
+  static String routePath = '/ShopPage';
 
   @override
   State<ShopPageWidget> createState() => _ShopPageWidgetState();
@@ -281,7 +281,7 @@ class _ShopPageWidgetState extends State<ShopPageWidget> {
                         onPressed: () async {
                           await Clipboard.setData(ClipboardData(
                               text:
-                                  'https://reveels.me/shop/${FFAppState().currentUserProfile.shopUrlSlug}'));
+                                  'https://reveels.me/PublicShopViewPage${FFAppState().currentUserProfile.shopUrlSlug}'));
                         },
                         text: 'Partager ma boutique',
                         options: FFButtonOptions(

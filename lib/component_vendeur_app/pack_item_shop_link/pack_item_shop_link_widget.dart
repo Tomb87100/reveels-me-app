@@ -80,10 +80,10 @@ class _PackItemShopLinkWidgetState extends State<PackItemShopLinkWidget> {
                   Container(
                     width: double.infinity,
                     height: double.infinity,
-                    child: custom_widgets.OnlineMediaPreview(
+                    child: custom_widgets.PublicImageViewer(
                       width: double.infinity,
                       height: double.infinity,
-                      storagePath: widget.coverImage,
+                      imageUrl: widget.coverImage,
                     ),
                   ),
                   Align(

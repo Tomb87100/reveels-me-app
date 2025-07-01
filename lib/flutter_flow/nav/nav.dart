@@ -151,12 +151,22 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
         FFRoute(
           name: PublicShopViewPageWidget.routeName,
           path: PublicShopViewPageWidget.routePath,
-          builder: (context, params) => PublicShopViewPageWidget(),
+          builder: (context, params) => PublicShopViewPageWidget(
+            shopSlug: params.getParam(
+              'shopSlug',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: PurchaseSuccessPageWidget.routeName,
           path: PurchaseSuccessPageWidget.routePath,
-          builder: (context, params) => PurchaseSuccessPageWidget(),
+          builder: (context, params) => PurchaseSuccessPageWidget(
+            sessionId: params.getParam(
+              'sessionId',
+              ParamType.String,
+            ),
+          ),
         ),
         FFRoute(
           name: InfosPersoWidget.routeName,
@@ -167,6 +177,20 @@ GoRouter createRouter(AppStateNotifier appStateNotifier) => GoRouter(
           name: EditMediaListPageWidget.routeName,
           path: EditMediaListPageWidget.routePath,
           builder: (context, params) => EditMediaListPageWidget(),
+        ),
+        FFRoute(
+          name: MediaViewerPageWidget.routeName,
+          path: MediaViewerPageWidget.routePath,
+          builder: (context, params) => MediaViewerPageWidget(
+            mediaUrl: params.getParam(
+              'mediaUrl',
+              ParamType.String,
+            ),
+            mediaType: params.getParam(
+              'mediaType',
+              ParamType.String,
+            ),
+          ),
         )
       ].map((r) => r.toRoute(appStateNotifier)).toList(),
     );

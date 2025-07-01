@@ -11,3 +11,4 @@ export 'fetch_current_user_profile.dart' show fetchCurrentUserProfile;
 export 'fetch_packs_by_slug.dart' show fetchPacksBySlug;
 export 'get_full_pack_details.dart' show getFullPackDetails;
 export 'force_redirect.dart' show forceRedirect;
+export 'get_url_parameter.dart' show getUrlParameter;

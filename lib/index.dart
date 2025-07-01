@@ -23,3 +23,5 @@ export '/pages_vendeur_app/infos_perso/infos_perso_widget.dart'
     show InfosPersoWidget;
 export '/pages_vendeur_app/edit_media_list_page/edit_media_list_page_widget.dart'
     show EditMediaListPageWidget;
+export '/pages_acheteur_web/media_viewer_page/media_viewer_page_widget.dart'
+    show MediaViewerPageWidget;
