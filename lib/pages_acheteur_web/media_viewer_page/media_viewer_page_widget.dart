@@ -85,13 +85,13 @@ class _MediaViewerPageWidgetState extends State<MediaViewerPageWidget> {
                       alignment: AlignmentDirectional(0.0, -1.0),
                       child: Builder(
                         builder: (context) {
-                          if (widget.mediaType == 'VIDEO') {
+                          if (widget.mediaType == 'video') {
                             return Container(
-                              width: double.infinity,
-                              height: double.infinity,
-                              child: custom_widgets.LightweightVideoPlayer(
-                                width: double.infinity,
-                                height: double.infinity,
+                              width: 300.0,
+                              height: 600.0,
+                              child: custom_widgets.SimpleVideoPlayer(
+                                width: 300.0,
+                                height: 600.0,
                                 videoUrl: widget.mediaUrl!,
                               ),
                             );

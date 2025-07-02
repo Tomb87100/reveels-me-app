@@ -77,7 +77,9 @@ class _PurchaseSuccessPageWidgetState extends State<PurchaseSuccessPageWidget> {
                 Align(
                   alignment: AlignmentDirectional(-1.0, -1.0),
                   child: Text(
-                    'Vos contenus débloqués',
+                    'Nombres de medias${GetPurchasedPackMediaCall.mediacount(
+                      (_model.mediaResponse?.jsonBody ?? ''),
+                    )?.toString()}',
                     style: FlutterFlowTheme.of(context).bodyMedium.override(
                           font: GoogleFonts.inter(
                             fontWeight: FontWeight.bold,
